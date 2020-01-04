@@ -6,7 +6,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-// In JPA, an Entity class is equivalent to a row of a database.
+/*
+ Annotations are a standard part of Java. Annotations are not code, but instructions used by the compiler
+ and other tools to help generate code.
+ In JPA, an Entity class is equivalent to a row of a database.
+*/
 @Entity
 public class Player {
 
@@ -17,7 +21,7 @@ public class Player {
     private long id;
     private String firstName;
     private String lastName;
-    private String userName;
+    // private String userName;
 
     // You must define a default (no-argument) constructor for any entity class. That's what JPA will call to create new instances
     public Player () {};
