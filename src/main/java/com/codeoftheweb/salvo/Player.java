@@ -11,6 +11,7 @@ import javax.persistence.Id;
  and other tools to help generate code.
  In JPA, an Entity class is equivalent to a row of a database.
 */
+
 @Entity
 public class Player {
 
