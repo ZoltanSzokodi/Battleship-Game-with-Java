@@ -23,7 +23,7 @@ async function loadData(url) {
     const resp = await fetch(url);
     const data = await resp.json();
     console.log(data);
-    showData(JSON.stringify(data, null, 2));
+    showData(JSON.stringify(data));
   } catch (err) {
     console.log(err)
   }
@@ -32,16 +32,20 @@ async function loadData(url) {
 // code to post a new player using AJAX
 // on success, reload and display the updated data from the server 
 async function postPlayer(email, url) {
-  await fetch(url, {
-    method: 'POST',
-    body: JSON.stringify({ "userName": email }),
-    headers: new Headers({
-      'Content-Type': 'application/json'
-    }),
-    dataType: "text"
-  })
-  showData("saved - RELOADING");
-  loadData(url);
+  try {
+    await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify({ "userName": email }),
+      headers: new Headers({
+        'Content-Type': 'application/json'
+      }),
+      dataType: "text"
+    })
+    showData("saved - RELOADING");
+    loadData(url);
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 // add event listener
