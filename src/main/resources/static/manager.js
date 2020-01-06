@@ -23,7 +23,7 @@ async function loadData(url) {
     const resp = await fetch(url);
     const data = await resp.json();
     console.log(data);
-    showData(JSON.stringify(data));
+    showData(JSON.stringify(data, null, 2));
   } catch (err) {
     console.log(err)
   }

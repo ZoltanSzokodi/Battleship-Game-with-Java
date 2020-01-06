@@ -14,13 +14,15 @@ public class SalvoApplication {
 		SpringApplication.run(SalvoApplication.class, args);
 	}
 
+	// Testing the API end points
+
 	/* @Bean
 	public CommandLineRunner initData(PlayerRepository repository) {
 		return (args) -> {
 			// save some sample data
-			repository.save(new Player("Rupert", "Kater", "rupu@email.com"));
-			repository.save(new Player("Robin", "Cute", "robin@email.com"));
-			repository.save(new Player("Philip", "Snake", "phil@email.com"));
+			repository.save(new Player("rupu@email.com"));
+			repository.save(new Player("robin@email.com"));
+			repository.save(new Player("phil@email.com"));
 		};
 	} */
 

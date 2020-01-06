@@ -2,10 +2,7 @@ package com.codeoftheweb.salvo;
 
 import java.util.Date;
 import org.hibernate.annotations.GenericGenerator;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Game {
@@ -15,19 +12,17 @@ public class Game {
     @GenericGenerator(name = "native", strategy = "native")
 
     private long id;
-    private Date gameStartDate;
+    private Date creationDate;
+
+    /* constructor  */
 
     public Game() { };
 
-    Game(Date startDate) {
-        gameStartDate = startDate;
+    Game(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
-    public Date getGameStartDate() {
-        return this.gameStartDate;
-    }
-
-    public void setGameStartDate(Date startDate) {
-        this.gameStartDate = startDate;
+    public Date getCreationDate() {
+        return this.creationDate;
     }
 }
