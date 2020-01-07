@@ -1,6 +1,8 @@
 package com.codeoftheweb.salvo;
 
 import java.util.Date;
+import java.util.Set;
+
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 
@@ -14,6 +16,9 @@ public class Game {
     private long id;
     private Date creationDate;
 
+    @OneToMany(mappedBy="game", fetch=FetchType.EAGER)
+    Set<GamePlayer> gamePlayers;
+
     /* constructor  */
 
     public Game() { };
@@ -24,5 +29,13 @@ public class Game {
 
     public Date getCreationDate() {
         return this.creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public long getId() {
+        return this.id;
     }
 }
