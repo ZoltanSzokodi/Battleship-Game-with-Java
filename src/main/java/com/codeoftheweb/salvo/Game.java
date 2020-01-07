@@ -2,7 +2,6 @@ package com.codeoftheweb.salvo;
 
 import java.util.Date;
 import java.util.Set;
-
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 

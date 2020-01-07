@@ -15,15 +15,16 @@ public class SalvoApplication {
 	}
 
 	// Testing the API end points
-
 	@Bean
-	public CommandLineRunner initData(PlayerRepository playerRepository, GameRepository gameRepository,
-									  GamePlayerRepository gamePlayerRepository) {
+	public CommandLineRunner initData(
+			PlayerRepository playerRepository,
+			GameRepository gameRepository,
+			GamePlayerRepository gamePlayerRepository) {
 
 		return (args) -> {
-			Player player1 = new Player("example1@email.com");
-			Player player2 = new Player("example2@email.com");
-			Player player3 = new Player("example3@email.com");
+			Player player1 = new Player("Peter", "peterGriffin@email.com");
+			Player player2 = new Player("Glenn", "glennQuagmire@email.com");
+			Player player3 = new Player("Joe", "joeSwanson@email.com");
 
 			Game game1 = new Game(new Date());
 			Game game2 = new Game(Date.from(new Date().toInstant().plusSeconds(3600)));
