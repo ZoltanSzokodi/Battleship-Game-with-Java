@@ -13,7 +13,7 @@ public class GamePlayer {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
-    private Date creationDate;
+    private long creationDate = new Date().getTime();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="player_id")
@@ -27,10 +27,9 @@ public class GamePlayer {
 
     public GamePlayer() { };
 
-    public GamePlayer(Game game, Player player, Date creationDate) {
+    public GamePlayer(Game game, Player player) {
         this.game = game;
         this.player = player;
-        this.creationDate = creationDate;
     }
 
     /* getters and setters */
@@ -51,7 +50,7 @@ public class GamePlayer {
         this.game = game;
     }
 
-    public Date getCreationDate() {
+    public long getCreationDate() {
         return this.creationDate;
     }
 }

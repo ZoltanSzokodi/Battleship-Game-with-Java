@@ -21,6 +21,7 @@ public class SalvoController {
 
         gameRepository.findAll().forEach(game -> {
             Map<String, Object> gameMap = new HashMap<>();
+            gameMap.put("created", game.getCreationDate());
             gameMap.put("game_id", game.getId());
             games.add(gameMap);
         });
