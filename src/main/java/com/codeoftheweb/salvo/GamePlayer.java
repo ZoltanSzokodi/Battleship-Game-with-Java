@@ -3,6 +3,7 @@ package com.codeoftheweb.salvo;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -13,7 +14,11 @@ public class GamePlayer {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
-    private long creationDate = new Date().getTime();
+    // private long creationDate = new Date().getTime();
+
+    // -------------------------------------------------------
+    private LocalDateTime gameTime =  LocalDateTime.now();
+    // -------------------------------------------------------
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="player_id")
@@ -50,7 +55,11 @@ public class GamePlayer {
         this.game = game;
     }
 
-    public long getCreationDate() {
-        return this.creationDate;
+    public LocalDateTime getGameTime() {
+        return this.gameTime;
+    }
+
+    public long getId() {
+        return id;
     }
 }

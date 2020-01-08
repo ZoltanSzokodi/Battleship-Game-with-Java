@@ -1,6 +1,6 @@
 package com.codeoftheweb.salvo;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Set;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
@@ -13,25 +13,46 @@ class Game {
     @GenericGenerator(name = "native", strategy = "native")
 
     private long id;
-    private long creationDate = new Date().getTime();
+    // private long creationDate = new Date().getTime();
 
-    @OneToMany(mappedBy="game", fetch=FetchType.EAGER)
-    Set<GamePlayer> gamePlayers;
+    // -------------------------------------------------------
+    private LocalDateTime gameTime =  LocalDateTime.now();
+    // -------------------------------------------------------
+
+    @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
+    private Set<GamePlayer> gamePlayers;
 
     /* constructor  */
-    Game() { };
+    public Game() { };
 
-    long getCreationDate() {
-        return this.creationDate;
+    /* getters and setters */
+
+    // ------------------------------------------------------
+    public void addGamePlayer(GamePlayer gamePlayer) {
+        gamePlayer.setGame(this);
+        gamePlayers.add(gamePlayer);
+    }
+    // ------------------------------------------------------
+
+    public LocalDateTime getGameTime() {
+        return this.gameTime;
+    }
+
+    public void setGameTime(LocalDateTime gameTime) {
+        this.gameTime = gameTime;
+    }
+
+    public Set<GamePlayer> getGamePlayers() {
+        return gamePlayers;
+    }
+
+    public long getId() {
+        return this.id;
     }
 
     /*
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
+    public void setGamePlayers(Set<GamePlayer> gamePlayers) {
+        this.gamePlayers = gamePlayers;
     }
     */
-
-    long getId() {
-        return this.id;
-    }
 }

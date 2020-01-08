@@ -22,12 +22,12 @@ public class Player {
     private String email;
 
     @OneToMany(mappedBy="player", fetch=FetchType.EAGER)
-    Set<GamePlayer> gamePlayers;
+    private Set<GamePlayer> gamePlayers;
 
     // You must define a default (no-argument) constructor for any entity class. That's what JPA will call to create new instances
     public Player() {};
 
-    Player(String userName, String email) {
+    public Player(String userName, String email) {
         this.userName = userName;
         this.email = email;
     }
@@ -42,6 +42,13 @@ public class Player {
         this.userName = userName;
     }
 
+    // ----------------------------------------------------
+    public void addGamePlayer(GamePlayer gamePlayer) {
+        gamePlayer.setPlayer(this);
+        gamePlayers.add(gamePlayer);
+    }
+    // ----------------------------------------------------
+
     public String getEmail() {
         return this.email;
     }
@@ -52,5 +59,13 @@ public class Player {
 
     public long getId() {
         return id;
+    }
+
+    public Set<GamePlayer> getGamePlayers() {
+        return gamePlayers;
+    }
+
+    public void setGamePlayers(Set<GamePlayer> gamePlayers) {
+        this.gamePlayers = gamePlayers;
     }
 }

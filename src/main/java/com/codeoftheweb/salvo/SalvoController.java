@@ -13,18 +13,27 @@ public class SalvoController {
     @Autowired
     private GameRepository gameRepository;
 
+    @Autowired
+    private PlayerRepository playerRepository;
+
+    @Autowired
+    private GamePlayerRepository gamePlayerRepository;
+
     /* ~ makes sure that all the URLs this controller looks for will have to start with /api. This will prevent any
     accidental overlap with the REST repository URLs, because you've made them start with /rest. */
     @RequestMapping("/games")
-    public List<Object> getAll() {
+    public List<Object> getAllGames() {
         List<Object> games = new ArrayList<>();
 
         gameRepository.findAll().forEach(game -> {
             Map<String, Object> gameMap = new HashMap<>();
-            gameMap.put("created", game.getCreationDate());
+
+            gameMap.put("created", game.getGameTime());
             gameMap.put("game_id", game.getId());
+
             games.add(gameMap);
         });
+
         return games;
     }
 }
