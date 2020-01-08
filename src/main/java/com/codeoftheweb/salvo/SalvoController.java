@@ -1,11 +1,13 @@
 package com.codeoftheweb.salvo;
 
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
 
+// The controller holds the methods to handle requests to and from the API.
 @RestController
 @RequestMapping("/api")
 public class SalvoController {
@@ -19,20 +21,78 @@ public class SalvoController {
     @Autowired
     private GamePlayerRepository gamePlayerRepository;
 
-    /* ~ makes sure that all the URLs this controller looks for will have to start with /api. This will prevent any
-    accidental overlap with the REST repository URLs, because you've made them start with /rest. */
+
+    // structuring the api route for all the games
     @RequestMapping("/games")
-    public List<Object> getAllGames() {
-        List<Object> games = new ArrayList<>();
+    public Map<String, Object> getGames() {
 
-        gameRepository.findAll().forEach(game -> {
-            Map<String, Object> gameMap = new HashMap<>();
+        // this map contains the games list - top level map (object)
+        Map<String, Object> games = new HashMap<>();
 
-            gameMap.put("created", game.getGameTime());
-            gameMap.put("game_id", game.getId());
+        // this list contains all the individual game maps (objects)
+        List<Object> gamesList = new ArrayList<>();
 
-            games.add(gameMap);
+        // this set contains all the users currently playing. Each user might be involved in multiple games.
+        // THIS SET IS FOR TESTING PURPOSES
+        Set<Object> players = new HashSet<>();
+
+        // loop through every game in the database
+        gameRepository.findAll().forEach(currentGame -> {
+            // create a map for each individual game
+            Map<String, Object> game = new HashMap<>();
+
+            // create a gamePlayers list within each game
+            List<Object> gamePlayers = new ArrayList<>();
+
+            // add the key value pairs to the individual game maps - first nesting within a game map
+            game.put("game_ID", currentGame.getId());
+            game.put("created", currentGame.getGameCreated());
+            game.put("gamePlayers", gamePlayers);
+
+            // loop through the gamePlayers in each game
+            gamePlayerRepository.findAll().forEach(currentGamePlayer -> {
+
+                // create a gamePlayer map for each game player within the gamePlayers list
+                Map<String, Object> gamePlayer = new HashMap<>();
+
+                // add the gamePlayer_ID key - value pair to the gamePlayer map
+                gamePlayer.put("gamePlayer_ID", currentGamePlayer.getId());
+
+                // loop through the players in each game
+                if (currentGame.getGamePlayers().contains(currentGamePlayer)) {
+                    playerRepository.findAll().forEach(currentPlayer -> {
+
+                        // for each gamePlayer map create the player map
+                        Map<String, Object> player = new HashMap<>();
+
+                        if (currentGamePlayer.getPlayer().getUserName().equals(currentPlayer.getUserName())) {
+
+                            // add the key - value pairs to the player map - second nesting within a game map
+                            player.put("player_email", currentPlayer.getEmail());
+                            player.put("player_ID", currentPlayer.getId());
+
+                            // FOR TESTING - add users currently playing to the playersMapSet
+                            players.add(player);
+
+                            // add the player map to the gamePlayer map
+                            gamePlayer.put("player", player);
+                        }
+                    });
+
+                    // push the individual gamePlayer map in the gamePlayers list
+                    gamePlayers.add(gamePlayer);
+                }
+            });
+
+            // push each individual game in the gamesList
+            gamesList.add(game);
         });
+
+        // add the gamesList to the games map
+        games.put("games", gamesList);
+
+        // FOR TESTING - users currently playing
+        // finalMapOfGames.put("playersObjList", players);
 
         return games;
     }

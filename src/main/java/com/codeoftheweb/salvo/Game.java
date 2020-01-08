@@ -16,7 +16,7 @@ class Game {
     // private long creationDate = new Date().getTime();
 
     // -------------------------------------------------------
-    private LocalDateTime gameTime =  LocalDateTime.now();
+    private LocalDateTime gameCreated =  LocalDateTime.now();
     // -------------------------------------------------------
 
     @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
@@ -34,12 +34,12 @@ class Game {
     }
     // ------------------------------------------------------
 
-    public LocalDateTime getGameTime() {
-        return this.gameTime;
+    public LocalDateTime getGameCreated() {
+        return this.gameCreated;
     }
 
-    public void setGameTime(LocalDateTime gameTime) {
-        this.gameTime = gameTime;
+    public void setGameCreated(LocalDateTime gameTime) {
+        this.gameCreated = gameTime;
     }
 
     public Set<GamePlayer> getGamePlayers() {

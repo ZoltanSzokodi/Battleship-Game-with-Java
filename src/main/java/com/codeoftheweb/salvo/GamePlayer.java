@@ -17,7 +17,7 @@ public class GamePlayer {
     // private long creationDate = new Date().getTime();
 
     // -------------------------------------------------------
-    private LocalDateTime gameTime =  LocalDateTime.now();
+    private LocalDateTime gameCreated =  LocalDateTime.now();
     // -------------------------------------------------------
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -55,8 +55,8 @@ public class GamePlayer {
         this.game = game;
     }
 
-    public LocalDateTime getGameTime() {
-        return this.gameTime;
+    public LocalDateTime getGameCreated() {
+        return this.gameCreated;
     }
 
     public long getId() {
