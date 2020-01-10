@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.2.2.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
 	id 'java'
+	id("com.github.node-gradle.node") version "2.2.0"
 }
 
 group = 'com.codeoftheweb'
@@ -29,3 +30,36 @@ dependencies {
 test {
 	useJUnitPlatform()
 }
+
+// Read more about how to configure the plugin from
+// https://github.com/srs/gradle-node-plugin/blob/master/docs/node.md
+
+task appNpmInstall(type: NpmTask) {
+	description = "Installs all dependencies from package.json"
+	workingDir = file("${project.projectDir}/src/main/salvo-webapp/")
+	args = ["install"]
+}
+
+task appNpmBuild(type: NpmTask) {
+	description = "Builds production version of the webapp"
+	workingDir = file("${project.projectDir}/src/main/salvo-webapp/")
+	args = ["run", "build"]
+}
+
+task copyWebApp(type: Copy) {
+	from 'src/main/salvo-webapp/build'
+	into 'build/resources/main/static/.'
+}
+
+	node {
+		download = false
+		version = "10.16.0"
+		npmVersion = "6.10.2"
+		nodeModulesDir = project.file("${project.projectDir}/src/main/salvo-webapp")
+		workDir = project.file("${project.buildDir}/nodejs")
+		npmWorkDir = project.file("${project.buildDir}/npm")
+}
+
+// appNpmBuild.dependsOn appNpmInstall
+// copyWebApp.dependsOn appNpmBuild
+// compileJava.dependsOn copyWebApp
