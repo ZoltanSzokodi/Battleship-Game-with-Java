@@ -131,7 +131,8 @@ public class SalvoController {
                     gamePlayerMap.put("gamePlayer_ID", currentGamePlayer.getId());
 
                     // --------------------------------------------------------------
-                    shipsList.add(getGamePlayerShips(currentGamePlayer));
+                    // shipsList.add(getGamePlayerShips(currentGamePlayer));
+                    getGamePlayerShips(currentGamePlayer, shipsList);
 
                     // loop through the players in each game
                     if(currentGame.getGamePlayers().contains(currentGamePlayer)) {
@@ -155,18 +156,18 @@ public class SalvoController {
                         gamePlayersList.add(gamePlayerMap);
                     }
                 });
-                // -------------------------------------------------------------
+                // add ships key - value pair to the gameMap
                 gameMap.put("ships", shipsList);
             }
         });
         return gameMap;
     }
 
-    // method to return all of the ships from a specific gamePlayer. To use in other
-    public List<Object> getGamePlayerShips(GamePlayer gamePlayer) {
+    // method to add all ships from a specific gamePlayer. To use in getGameView method.
+    private void getGamePlayerShips(GamePlayer gamePlayer, List<Object> shipsList) {
 
         // the ships list containing the shipMaps with their type and locations list
-        List<Object> shipsList = new ArrayList<>();
+        // List<Object> shipsList = new ArrayList<>();
 
         gamePlayer.getShips().forEach(currentShip -> {
 
@@ -179,6 +180,5 @@ public class SalvoController {
             // ships.put("shipID", currentShip.getId());
             shipsList.add(shipMap);
         });
-        return shipsList;
     }
 }
