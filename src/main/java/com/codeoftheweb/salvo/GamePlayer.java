@@ -46,7 +46,7 @@ public class GamePlayer {
         ship.setGamePlayer(this);
         ships.add(ship);
     }
-
+    // A game player has a set of ships, return that set
     public Set<Ship> getShips() {
         return ships;
     }

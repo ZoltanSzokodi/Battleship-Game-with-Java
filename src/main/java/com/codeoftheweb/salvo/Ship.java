@@ -33,6 +33,7 @@ public class Ship {
         this.shipType = shipType;
     }
 
+    // A ship has a gamePlayer, return that player
     public GamePlayer getGamePlayer() {
         return gamePlayer;
     }
