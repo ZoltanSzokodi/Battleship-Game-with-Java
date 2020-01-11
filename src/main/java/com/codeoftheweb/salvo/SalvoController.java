@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 // The controller holds the methods to handle requests to and from the API.
 @CrossOrigin(origins = "http://localhost:3000")
@@ -109,10 +110,14 @@ public class SalvoController {
         // the gamePlayers list containing the gamePlayerMaps
         List<Object> gamePlayersList = new ArrayList<>();
 
+        // -------------------------------------------
+        List<Object> shipsList = new ArrayList<>();
+
         // check if the requested game's ID (currentGame) matches any of the  games in the gameRepository
         gameRepository.findAll().forEach(currentGame -> {
             if (currentGame.getId() == gameID) {
 
+                // add the top level key - value pairs to the gameMap
                 gameMap.put("game_ID", currentGame.getId());
                 gameMap.put("created", currentGame.getGameCreated());
                 gameMap.put("gamePlayers", gamePlayersList);
@@ -124,8 +129,9 @@ public class SalvoController {
 
                     // map relevant information about the game into the newly created gamePlayerMap
                     gamePlayerMap.put("gamePlayer_ID", currentGamePlayer.getId());
-                    // singleGamePlayerMap.put("ships", getShipsfromGamePlayer(gamePlayer));
-                    // singleGamePlayerMap.put("salvoes", getSalvoesfromGamePlayer(gamePlayer));
+
+                    // --------------------------------------------------------------
+                    shipsList.add(getGamePlayerShips(currentGamePlayer));
 
                     // loop through the players in each game
                     if(currentGame.getGamePlayers().contains(currentGamePlayer)) {
@@ -149,8 +155,30 @@ public class SalvoController {
                         gamePlayersList.add(gamePlayerMap);
                     }
                 });
+                // -------------------------------------------------------------
+                gameMap.put("ships", shipsList);
             }
         });
         return gameMap;
+    }
+
+    // method to return all of the ships from a specific gamePlayer. To use in other
+    public List<Object> getGamePlayerShips(GamePlayer gamePlayer) {
+
+        // the ships list containing the shipMaps with their type and locations list
+        List<Object> shipsList = new ArrayList<>();
+
+        gamePlayer.getShips().forEach(currentShip -> {
+
+            // create a map for each individual ship
+            Map<String, Object> shipMap = new LinkedHashMap<>();
+
+            shipMap.put("type", currentShip.getShipType());
+            shipMap.put("location", currentShip.getLocation());
+            // ships.put("sunk", currentShip.isSunk());
+            // ships.put("shipID", currentShip.getId());
+            shipsList.add(shipMap);
+        });
+        return shipsList;
     }
 }
