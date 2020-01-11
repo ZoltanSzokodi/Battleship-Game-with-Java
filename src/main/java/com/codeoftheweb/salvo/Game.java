@@ -1,6 +1,6 @@
 package com.codeoftheweb.salvo;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Set;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
@@ -13,12 +13,10 @@ class Game {
     @GenericGenerator(name = "native", strategy = "native")
 
     private long id;
-    // private long creationDate = new Date().getTime();
+    private long gameCreated =  new Date().getTime();
 
-    // -------------------------------------------------------
-    private LocalDateTime gameCreated =  LocalDateTime.now();
-    // -------------------------------------------------------
-
+    // Game has a one-to-many relationship with GamePlayer
+    // ergo, Game has a many-to-many relationship with Player
     @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
     private Set<GamePlayer> gamePlayers;
 
@@ -27,18 +25,16 @@ class Game {
 
     /* getters and setters */
 
-    // ------------------------------------------------------
     public void addGamePlayer(GamePlayer gamePlayer) {
         gamePlayer.setGame(this);
         gamePlayers.add(gamePlayer);
     }
-    // ------------------------------------------------------
 
-    public LocalDateTime getGameCreated() {
+    public long getGameCreated() {
         return this.gameCreated;
     }
 
-    public void setGameCreated(LocalDateTime gameTime) {
+    public void setGameCreated(long gameTime) {
         this.gameCreated = gameTime;
     }
 
@@ -49,10 +45,4 @@ class Game {
     public long getId() {
         return this.id;
     }
-
-    /*
-    public void setGamePlayers(Set<GamePlayer> gamePlayers) {
-        this.gamePlayers = gamePlayers;
-    }
-    */
 }

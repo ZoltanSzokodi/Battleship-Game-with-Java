@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.*;
 
 // The controller holds the methods to handle requests to and from the API.
-@RestController
 @CrossOrigin(origins = "http://localhost:3000")
+@RestController
 @RequestMapping("/api")
 public class SalvoController {
 

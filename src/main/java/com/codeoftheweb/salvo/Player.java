@@ -10,10 +10,10 @@ import java.util.Set;
  In JPA, an Entity class is equivalent to a row of a database.
 */
 
-@Entity
+@Entity // ~ denotes the whole class for storage in a relational table.
 public class Player {
 
-    @Id
+    @Id // ~ to note the primary key and that is generated automatically when needed.
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
 
@@ -21,6 +21,8 @@ public class Player {
     private String userName;
     private String email;
 
+    // Player has a one-to-many relationship with GamePlayer
+    // ergo, Player has a many-to-many relationship with Game
     @OneToMany(mappedBy="player", fetch=FetchType.EAGER)
     private Set<GamePlayer> gamePlayers;
 
@@ -42,12 +44,10 @@ public class Player {
         this.userName = userName;
     }
 
-    // ----------------------------------------------------
     public void addGamePlayer(GamePlayer gamePlayer) {
         gamePlayer.setPlayer(this);
         gamePlayers.add(gamePlayer);
     }
-    // ----------------------------------------------------
 
     public String getEmail() {
         return this.email;

@@ -3,7 +3,6 @@ package com.codeoftheweb.salvo;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,24 +15,21 @@ public class GamePlayer {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
     private long id;
-    // private long creationDate = new Date().getTime();
+    private long gameCreated =  new Date().getTime();
 
-    // -------------------------------------------------------
-    private LocalDateTime gameCreated =  LocalDateTime.now();
-    // -------------------------------------------------------
-
+    // GamePlayer has many-to-one relationship with Player
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="player_id")
     private Player player;
 
+    // GamePlayer has many-to-one relationship with Game
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="game_id")
     private Game game;
 
-    // --------------------------------------------
+    // A gamePlayer has many ships
     @OneToMany(mappedBy="gamePlayer", fetch = FetchType.EAGER)
-    Set<Ship> ships = new HashSet<>();
-    // --------------------------------------------
+    private Set<Ship> ships = new HashSet<>();
 
     /* constructor */
 
@@ -46,24 +42,18 @@ public class GamePlayer {
 
     /* getters and setters */
 
-    // --------------------------------------------
     public void addShip(Ship ship) {
         ship.setGamePlayer(this);
         ships.add(ship);
     }
 
-    // --------------------------------------------
     public Set<Ship> getShips() {
         return ships;
     }
 
-    // --------------------------------------------
-
     public void setShips(Set<Ship> ships) {
         this.ships = ships;
     }
-
-    // ---------------------------------------------
 
     public Player getPlayer() {
         return this.player;
@@ -81,7 +71,7 @@ public class GamePlayer {
         this.game = game;
     }
 
-    public LocalDateTime getGameCreated() {
+    public long getGameCreated() {
         return this.gameCreated;
     }
 

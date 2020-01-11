@@ -16,10 +16,13 @@ public class Ship {
     private String shipType;
     private boolean sunk = false;
 
+    // one gamePlayer can have many ships
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="gamePlayer_id")
     private GamePlayer gamePlayer;
 
+    // we have a one-to-many relationship between ships and locations
+    // Locations are just strings, "h2" and "b3". In Java JPA, you can create a one-to-many relationship from an entity, such as Ship, to a basic data type, such as a location string, using the @ElementCollection annotation
     @ElementCollection
     @Column(name="location")
     private List<String> location = new ArrayList<>();
