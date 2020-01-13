@@ -1,0 +1,14 @@
+.game-wrapper {
+  width: 100vw;
+  height: 100vh;
+  background-color: honeydew;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.table {
+  width: 55rem;
+  height: 55rem;
+  background-color: lightcoral;
+}
