@@ -29,17 +29,17 @@ public class SalvoController {
 
     // structuring the api route for all the games
     @RequestMapping("/games")
-    public Map<String, Object> getGames() {
+    public List<Map> getGames() {
 
         // this map contains the games list - top level map (object)
-        Map<String, Object> games = new LinkedHashMap<>();
+        //Map<String, Object> games = new LinkedHashMap<>();
 
         // this list contains all the individual game maps (objects)
-        List<Object> gamesList = new ArrayList<>();
+        List<Map> gamesList = new ArrayList<>();
 
         // this set contains all the users currently playing. Each user might be involved in multiple games.
         // THIS SET IS FOR TESTING PURPOSES
-        Set<Object> playersSet = new HashSet<>();
+        Set<Map> playersSet = new HashSet<>();
 
         // loop through every game in the database
         gameRepository.findAll().forEach(currentGame -> {
@@ -47,7 +47,7 @@ public class SalvoController {
             Map<String, Object> gameMap = new LinkedHashMap<>();
 
             // create a gamePlayers list within each game
-            List<Object> gamePlayersList = new ArrayList<>();
+            List<Map> gamePlayersList = new ArrayList<>();
 
             // add the key value pairs to the individual game maps - first nesting within a game map
             gameMap.put("game_ID", currentGame.getId());
@@ -92,12 +92,12 @@ public class SalvoController {
             gamesList.add(gameMap);
         });
         // add the gamesList to the games map
-        games.put("games", gamesList);
+        //games.put("games", gamesList);
 
         // FOR TESTING - users currently playing
         // games.put("players", playersSet);
 
-        return games;
+        return gamesList;
     }
 
     // structuring the api route for information about a specific game from a specific game player's point of view
@@ -111,7 +111,7 @@ public class SalvoController {
         List<Object> gamePlayersList = new ArrayList<>();
 
         // -------------------------------------------
-        List<Object> shipsList = new ArrayList<>();
+        List<Map> shipsList = new ArrayList<>();
 
         // check if the requested game's ID (currentGame) matches any of the  games in the gameRepository
         gameRepository.findAll().forEach(currentGame -> {
@@ -164,7 +164,7 @@ public class SalvoController {
     }
 
     // method to add all ships from a specific gamePlayer. To use in getGameView method.
-    private void getGamePlayerShips(GamePlayer gamePlayer, List<Object> shipsList) {
+    private void getGamePlayerShips(GamePlayer gamePlayer, List<Map> shipsList) {
 
         // the ships list containing the shipMaps with their type and locations list
         // List<Object> shipsList = new ArrayList<>();
