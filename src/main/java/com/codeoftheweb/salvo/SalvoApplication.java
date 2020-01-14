@@ -28,28 +28,28 @@ public class SalvoApplication {
 			Player player3 = new Player("Joe", "joeSwanson@email.com");
 
 			Ship ship1 = new Ship("destroyer");
-			ship1.setLocation((Arrays.asList("h3", "h2", "h1")));
+			ship1.setLocation((Arrays.asList("H3", "H2", "H1")));
 
 			Ship ship2 = new Ship("aircraft");
-			ship2.setLocation((Arrays.asList("b3", "b4", "b5")));
+			ship2.setLocation((Arrays.asList("B3", "B4", "B5")));
 
 			Ship ship3 = new Ship("submarine");
-			ship3.setLocation((Arrays.asList("a1", "b1", "c1")));
+			ship3.setLocation((Arrays.asList("A1", "B1", "C1")));
 
 			Ship ship4 = new Ship("jet");
-			ship4.setLocation((Arrays.asList("e3", "e4", "e5")));
+			ship4.setLocation((Arrays.asList("E3", "E4", "E5")));
 
 			Ship ship5 = new Ship("helicopter");
-			ship5.setLocation((Arrays.asList("e5", "f5", "g5")));
+			ship5.setLocation((Arrays.asList("E5", "F5", "G5")));
 
 			Ship ship6 = new Ship("tank");
-			ship6.setLocation((Arrays.asList("c5", "c6", "c7")));
+			ship6.setLocation((Arrays.asList("C5", "C6", "C7")));
 
 			Ship ship7 = new Ship("nuke");
-			ship7.setLocation((Arrays.asList("d4", "e4", "f4")));
+			ship7.setLocation((Arrays.asList("C4", "D4", "E4")));
 
 			Ship ship8 = new Ship("submarine");
-			ship8.setLocation((Arrays.asList("e5", "f5", "g5")));
+			ship8.setLocation((Arrays.asList("E5", "F5", "G5")));
 
 			Game game1 = new Game();
 			Game game2 = new Game();

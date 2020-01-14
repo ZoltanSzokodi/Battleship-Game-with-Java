@@ -179,10 +179,11 @@ public class SalvoController {
             // create a map for each individual ship
             Map<String, Object> shipMap = new LinkedHashMap<>();
 
+            shipMap.put("ship_ID", currentShip.getId());
             shipMap.put("type", currentShip.getShipType());
             shipMap.put("location", currentShip.getLocation());
             // ships.put("sunk", currentShip.isSunk());
-            // ships.put("shipID", currentShip.getId());
+
             shipsList.add(shipMap);
         });
     }
