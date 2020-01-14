@@ -51,7 +51,7 @@ public class SalvoController {
 
             // add the key value pairs to the individual game maps - first nesting within a game map
             gameMap.put("game_ID", currentGame.getId());
-            gameMap.put("created", currentGame.getGameCreated());
+            gameMap.put("game_created", currentGame.getGameCreated());
             gameMap.put("gamePlayers", gamePlayersList);
 
             // loop through the gamePlayers in each game
@@ -110,8 +110,8 @@ public class SalvoController {
         // the gamePlayers list containing the gamePlayerMaps
         List<Object> gamePlayersList = new ArrayList<>();
 
-        // -------------------------------------------
-        List<Map> shipsList = new ArrayList<>();
+        // -------------- OLD CODE ----------------
+        //List<Map> shipsList = new ArrayList<>();
 
         // check if the requested game's ID (currentGame) matches any of the  games in the gameRepository
         gameRepository.findAll().forEach(currentGame -> {
@@ -119,10 +119,14 @@ public class SalvoController {
 
                 // add the top level key - value pairs to the gameMap
                 gameMap.put("game_ID", currentGame.getId());
-                gameMap.put("created", currentGame.getGameCreated());
+                gameMap.put("game_created", currentGame.getGameCreated());
                 gameMap.put("gamePlayers", gamePlayersList);
 
                 currentGame.getGamePlayers().forEach(currentGamePlayer -> {
+
+                    // --------------- NEW CODE ------------------
+                    // create a list of ship maps for each individual gamePlayer
+                    List<Map> shipsList = new ArrayList<>();
 
                     // create a map for each individual gamePlayer
                     Map<String, Object> gamePlayerMap = new LinkedHashMap<>();
@@ -147,6 +151,7 @@ public class SalvoController {
                                 player.put("player_ID", currentPlayer.getId());
                                 player.put("player_name", currentPlayer.getUserName());
                                 player.put("player_email", currentPlayer.getEmail());
+                                player.put("player_ships", shipsList);
 
                                 // add the player map to the gamePlayer map
                                 gamePlayerMap.put("player", player);
@@ -156,8 +161,8 @@ public class SalvoController {
                         gamePlayersList.add(gamePlayerMap);
                     }
                 });
-                // add ships key - value pair to the gameMap
-                gameMap.put("ships", shipsList);
+                // --------- OLD CODE -------------
+                //gameMap.put("ships", shipsList);
             }
         });
         return gameMap;

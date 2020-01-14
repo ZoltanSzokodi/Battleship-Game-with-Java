@@ -1,6 +1,6 @@
 import React from 'react'
 import Games from './components/Games'
-import Game from './components/Game'
+import GameTable from './components/GameTable'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import './styles/App.css';
 
@@ -9,7 +9,7 @@ function App() {
     <Router>
       <React.Fragment>
         <Route exact path="/games" component={Games} />
-        <Route exact path="/game" component={Game} />
+        <Route exact path="/game" component={GameTable} />
       </React.Fragment>
     </Router>
   )
