@@ -35,7 +35,12 @@ function GameView() {
 
   return (
     <div className="game-wrapper">
-      {!loading && <Table gameViewObj={gameViewObj} />}
+      {!loading && <h2>Player: {gameViewObj.player_name} Opponent: {gameViewObj.opponent_info.opponent_name}</h2>}
+      <div className="tables-container">
+        {!loading && <Table gridType="ship" gameViewObj={gameViewObj} />}
+        {!loading && <Table gridType="salvo" gameViewObj={gameViewObj} />}
+
+      </div>
     </div>
   )
 }
