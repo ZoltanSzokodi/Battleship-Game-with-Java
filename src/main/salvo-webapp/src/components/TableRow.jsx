@@ -1,7 +1,7 @@
 import React from 'react'
-import GameTableCell from './GameTableCell'
+import TableCell from './TableCell'
 
-function GameTableRow({ th, gameView }) {
+function TableRow({ th, gameViewObj }) {
   // const cellsLength = Array.from(Array(10).keys());
   const cellsArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
@@ -9,10 +9,10 @@ function GameTableRow({ th, gameView }) {
     <tr>
       <th>{th}</th>
       {cellsArr.map(cell => (
-        <GameTableCell key={th + cell} id={th + cell} gameView={gameView} />
+        <TableCell key={th + cell} id={th + cell} gameViewObj={gameViewObj} />
       ))}
     </tr>
   )
 }
 
-export default GameTableRow;
+export default TableRow;

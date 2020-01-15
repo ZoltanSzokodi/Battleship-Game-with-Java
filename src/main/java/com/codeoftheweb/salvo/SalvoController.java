@@ -127,7 +127,7 @@ public class SalvoController {
 
             // opponent information used for development purposes
             //Map<String, Object> gpViewMap = new HashMap<>();
-            gamePlayerMap.put("opponentInformation", getEnemyInfo(gamePlayerRepository.getOne(gamePlayer_ID)));
+            gamePlayerMap.put("opponent_info", getOpponentInfo(gamePlayerRepository.getOne(gamePlayer_ID)));
             //gpViewMap.put("gamePlayer", gpOBJ);
 
             return gamePlayerMap;
@@ -173,19 +173,19 @@ public class SalvoController {
 
     // method to return information about a given gamePlayer's opponents.
     // useful for other API endpoint structuring
-    public Map<String, Object> getEnemyInfo (GamePlayer you){
+    public Map<String, Object> getOpponentInfo (GamePlayer you){
 
-        Map<String, Object> enemyMap = new LinkedHashMap<>();
+        Map<String, Object> opponentMap = new LinkedHashMap<>();
 
-        you.getGame().getGamePlayers().forEach(enemy -> {
-            if (enemy.getId() != you.getId()){
+        you.getGame().getGamePlayers().forEach(opponent -> {
+            if (opponent.getId() != you.getId()){
 
-                enemyMap.put("gamePlayer_ID", enemy.getId());
-                enemyMap.put("player_name", enemy.getPlayer().getUserName());
-                enemyMap.put("enemy_salvoes", getGamePlayerSalvoes(enemy));
-                enemyMap.put("enemy_ships", getGamePlayerShips(enemy));
+                opponentMap.put("gamePlayer_ID", opponent.getId());
+                opponentMap.put("opponent_name", opponent.getPlayer().getUserName());
+                opponentMap.put("opponent_salvoes", getGamePlayerSalvoes(opponent));
+                opponentMap.put("opponent_ships", getGamePlayerShips(opponent));
             }
         });
-        return enemyMap;
+        return opponentMap;
     }
 }

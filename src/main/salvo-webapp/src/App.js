@@ -1,6 +1,6 @@
 import React from 'react'
 import Games from './components/Games'
-import GameTable from './components/GameTable'
+import GameTable from './components/GameView'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import './styles/App.css';
 
