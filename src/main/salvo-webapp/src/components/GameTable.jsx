@@ -47,6 +47,7 @@ function GameTable() {
             ))}
           </tr>
         </thead>
+
         <tbody>
           {rowsArr.map(row => (
             <GameTableRow key={row} th={row} gameView={gameView} />

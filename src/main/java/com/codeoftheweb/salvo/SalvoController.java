@@ -1,6 +1,8 @@
 package com.codeoftheweb.salvo;
 
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +28,12 @@ public class SalvoController {
 
     @Autowired
     private ShipRepository shipRepository;
+
+    @Autowired
+    private SalvoRepository salvoRepository;
+
+    @Autowired
+    private ScoreRepository scoreRepository;
 
     // structuring the api route for all the games
     @RequestMapping("/games")
@@ -100,91 +108,84 @@ public class SalvoController {
         return gamesList;
     }
 
-    // structuring the api route for information about a specific game from a specific game player's point of view
-    @RequestMapping("/game_view/{gameID}")
-    public Map<String, Object> getGameView(@PathVariable long gameID) {
+    // API end point to see the relevent information about each game they are in, including
+    // shots, turns, score, etc. This information is scoped with authentication to
+    // prevent players from seeing opposing players information
+    @RequestMapping("/game_view/{gamePlayer_ID}")
+    public Map<String, Object> getGameViewForGamePlayer(@PathVariable long gamePlayer_ID) {
 
-        // the map for the actual game
-        Map<String, Object> gameMap = new LinkedHashMap<>();
+            Map<String, Object> gamePlayerMap = new LinkedHashMap<>();
 
-        // the gamePlayers list containing the gamePlayerMaps
-        List<Object> gamePlayersList = new ArrayList<>();
+            //Map<String, Object> gpOBJ = new LinkedHashMap<>();
 
-        // -------------- OLD CODE ----------------
-        //List<Map> shipsList = new ArrayList<>();
+            // make a map of a game players game information.
+            gamePlayerMap.put("gamePlayer_ID", gamePlayerRepository.getOne(gamePlayer_ID).getId());
+            gamePlayerMap.put("player_name", gamePlayerRepository.getOne(gamePlayer_ID).getPlayer().getUserName());
+            gamePlayerMap.put("ships", getGamePlayerShips(gamePlayerRepository.getOne(gamePlayer_ID)));
+            gamePlayerMap.put("salvoes", getGamePlayerSalvoes(gamePlayerRepository.getOne(gamePlayer_ID)));
+            //gpOBJ.put("gamePlayer", gamePlayerMap);
 
-        // check if the requested game's ID (currentGame) matches any of the  games in the gameRepository
-        gameRepository.findAll().forEach(currentGame -> {
-            if (currentGame.getId() == gameID) {
+            // opponent information used for development purposes
+            //Map<String, Object> gpViewMap = new HashMap<>();
+            gamePlayerMap.put("opponentInformation", getEnemyInfo(gamePlayerRepository.getOne(gamePlayer_ID)));
+            //gpViewMap.put("gamePlayer", gpOBJ);
 
-                // add the top level key - value pairs to the gameMap
-                gameMap.put("game_ID", currentGame.getId());
-                gameMap.put("game_created", currentGame.getGameCreated());
-                gameMap.put("gamePlayers", gamePlayersList);
+            return gamePlayerMap;
 
-                currentGame.getGamePlayers().forEach(currentGamePlayer -> {
-
-                    // --------------- NEW CODE ------------------
-                    // create a list of ship maps for each individual gamePlayer
-                    List<Map> shipsList = new ArrayList<>();
-
-                    // create a map for each individual gamePlayer
-                    Map<String, Object> gamePlayerMap = new LinkedHashMap<>();
-
-                    // map relevant information about the game into the newly created gamePlayerMap
-                    gamePlayerMap.put("gamePlayer_ID", currentGamePlayer.getId());
-
-                    // --------------------------------------------------------------
-                    // shipsList.add(getGamePlayerShips(currentGamePlayer));
-                    getGamePlayerShips(currentGamePlayer, shipsList);
-
-                    // loop through the players in each game
-                    if(currentGame.getGamePlayers().contains(currentGamePlayer)) {
-                        playerRepository.findAll().forEach(currentPlayer -> {
-
-                            // for each gamePlayer map create the player map
-                            Map<String, Object> player = new LinkedHashMap<>();
-
-                            if (currentGamePlayer.getPlayer().getUserName().equals(currentPlayer.getUserName())) {
-
-                                // add the key - value pairs to the player map - second nesting within a game map
-                                player.put("player_ID", currentPlayer.getId());
-                                player.put("player_name", currentPlayer.getUserName());
-                                player.put("player_email", currentPlayer.getEmail());
-                                player.put("player_ships", shipsList);
-
-                                // add the player map to the gamePlayer map
-                                gamePlayerMap.put("player", player);
-                            }
-                        });
-                        // push the individual gamePlayer map in the gamePlayers list
-                        gamePlayersList.add(gamePlayerMap);
-                    }
-                });
-                // --------- OLD CODE -------------
-                //gameMap.put("ships", shipsList);
-            }
-        });
-        return gameMap;
     }
 
-    // method to add all ships from a specific gamePlayer. To use in getGameView method.
-    private void getGamePlayerShips(GamePlayer gamePlayer, List<Map> shipsList) {
+    // method to return all of the ships from a specific gamePlayer. To use in other methods
+    // request mapping API endpoints
+    public List<Map> getGamePlayerShips(GamePlayer gamePlayer) {
 
-        // the ships list containing the shipMaps with their type and locations list
-        // List<Object> shipsList = new ArrayList<>();
+        List<Map> shipsList = new ArrayList<>();
 
-        gamePlayer.getShips().forEach(currentShip -> {
+        gamePlayer.getShips().forEach(ship -> {
 
-            // create a map for each individual ship
             Map<String, Object> shipMap = new LinkedHashMap<>();
 
-            shipMap.put("ship_ID", currentShip.getId());
-            shipMap.put("type", currentShip.getShipType());
-            shipMap.put("location", currentShip.getLocation());
-            // ships.put("sunk", currentShip.isSunk());
+            shipMap.put("ship_ID", ship.getId());
+            shipMap.put("type", ship.getShipType());
+            shipMap.put("location", ship.getLocation());
+            shipMap.put("sunk", ship.isSunk());
 
             shipsList.add(shipMap);
         });
+        return shipsList;
+    }
+
+    // method to return all of the shots from a specific gamePlayer. To use in other methods
+    // request mapping API endpoints
+    public List<Object> getGamePlayerSalvoes(GamePlayer gamePlayer) {
+
+        List<Object> salvoesList = new ArrayList<>();
+
+        gamePlayer.getSalvoes().stream().sorted(Comparator.comparing(Salvo::getTurn)).forEach(salvo -> {
+
+            Map<String, Object> shipMap = new HashMap<>();
+
+            shipMap.put("turn", salvo.getTurn());
+            shipMap.put("location", salvo.getLocation());
+            salvoesList.add(shipMap);
+        });
+        return salvoesList;
+    }
+
+    // method to return information about a given gamePlayer's opponents.
+    // useful for other API endpoint structuring
+    public Map<String, Object> getEnemyInfo (GamePlayer you){
+
+        Map<String, Object> enemyMap = new LinkedHashMap<>();
+
+        you.getGame().getGamePlayers().forEach(enemy -> {
+            if (enemy.getId() != you.getId()){
+
+                enemyMap.put("gamePlayer_ID", enemy.getId());
+                enemyMap.put("player_name", enemy.getPlayer().getUserName());
+                enemyMap.put("enemy_salvoes", getGamePlayerSalvoes(enemy));
+                enemyMap.put("enemy_ships", getGamePlayerShips(enemy));
+            }
+        });
+        return enemyMap;
     }
 }

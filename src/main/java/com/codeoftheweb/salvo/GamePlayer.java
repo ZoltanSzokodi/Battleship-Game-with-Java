@@ -1,5 +1,6 @@
 package com.codeoftheweb.salvo;
 
+import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -31,6 +32,9 @@ public class GamePlayer {
     @OneToMany(mappedBy="gamePlayer", fetch = FetchType.EAGER)
     private Set<Ship> ships = new HashSet<>();
 
+    @OneToMany(mappedBy = "gamePlayer", fetch = FetchType.EAGER)
+    Set<Salvo> salvoes = new HashSet<>();
+
     /* constructor */
 
     public GamePlayer() { };
@@ -55,8 +59,9 @@ public class GamePlayer {
         this.ships = ships;
     }
 
+    @JsonIgnore
     public Player getPlayer() {
-        return this.player;
+        return player;
     }
 
     public void setPlayer(Player player) {
@@ -64,7 +69,7 @@ public class GamePlayer {
     }
 
     public Game getGame() {
-        return this.game;
+        return game;
     }
 
     public void setGame(Game game) {
@@ -72,10 +77,42 @@ public class GamePlayer {
     }
 
     public long getGameCreated() {
-        return this.gameCreated;
+        return gameCreated;
+    }
+
+    public Set<Salvo> getSalvoes() {
+        return salvoes;
+    }
+
+    public void setSalvoes(Set<Salvo> salvoes) {
+        this.salvoes = salvoes;
+    }
+
+    public void addSalvo(Salvo salvo) {
+        salvo.setGamePlayer(this);
+        salvoes.add(salvo);
+    }
+
+    public Set<Score> getScoresFromGamePlayer (GamePlayer gamePlayer) {
+        return gamePlayer.getPlayer().getScores();
     }
 
     public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "GamePlayer{" +
+                "id=" + id +
+                ", player=" + this.player +
+                ", game=" + this.game +
+                ", ships=" + this.ships +
+                ", gameTime=" + this.gameCreated +
+                '}';
     }
 }

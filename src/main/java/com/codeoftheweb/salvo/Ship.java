@@ -11,8 +11,8 @@ public class Ship {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
-
     private long id;
+
     private String shipType;
     private boolean sunk = false;
 
@@ -38,12 +38,17 @@ public class Ship {
         return gamePlayer;
     }
 
+    @JsonIgnore
     public void setGamePlayer(GamePlayer gamePlayer) {
         this.gamePlayer = gamePlayer;
     }
 
     public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public List<String> getLocation() {
@@ -68,5 +73,15 @@ public class Ship {
 
     public void setSunk(boolean sunk) {
         this.sunk = sunk;
+    }
+
+    @Override
+    public String toString() {
+        return "Ship{" +
+                "id=" + id +
+                ", shipType='" + shipType + '\'' +
+                ", gamePlayer=" + this.gamePlayer +
+                ", location=" + location +
+                '}';
     }
 }

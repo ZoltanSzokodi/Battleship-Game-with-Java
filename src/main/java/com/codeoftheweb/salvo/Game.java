@@ -1,7 +1,10 @@
 package com.codeoftheweb.salvo;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
+
+import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 
@@ -14,11 +17,15 @@ class Game {
 
     private long id;
     private long gameCreated =  new Date().getTime();
+    private boolean finished = false;
 
     // Game has a one-to-many relationship with GamePlayer
     // ergo, Game has a many-to-many relationship with Player
     @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
     private Set<GamePlayer> gamePlayers;
+
+    @OneToMany(mappedBy = "game", fetch = FetchType.EAGER)
+    Set<Score> scores = new HashSet<>();
 
     /* constructor  */
     public Game() { };
@@ -30,6 +37,20 @@ class Game {
         gamePlayers.add(gamePlayer);
     }
 
+    @JsonIgnore
+    public Set<GamePlayer> getGamePlayers() {
+        return gamePlayers;
+    }
+
+    @JsonIgnore
+    public Set<Score> getScore() {
+        return this.scores;
+    }
+
+    public Set<Score> getScores() {
+        return scores;
+    }
+
     public long getGameCreated() {
         return this.gameCreated;
     }
@@ -38,11 +59,24 @@ class Game {
         this.gameCreated = gameTime;
     }
 
-    public Set<GamePlayer> getGamePlayers() {
-        return gamePlayers;
-    }
-
     public long getId() {
         return this.id;
+    }
+
+    public Boolean getFinished() {
+        return finished;
+    }
+
+    public void setFinished(Boolean finished) {
+        this.finished = finished;
+    }
+
+    boolean isFull() {
+        return this.gamePlayers.size() > 1;
+    }
+
+    @Override
+    public String toString() {
+        return id + " " + gameCreated;
     }
 }

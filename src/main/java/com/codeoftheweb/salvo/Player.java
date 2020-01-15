@@ -1,7 +1,10 @@
 package com.codeoftheweb.salvo;
 
+import net.minidev.json.annotate.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 /*
@@ -19,15 +22,19 @@ public class Player {
 
     private long id;
     private String userName;
+    private String password;
     private String email;
 
     // Player has a one-to-many relationship with GamePlayer
     // ergo, Player has a many-to-many relationship with Game
-    @OneToMany(mappedBy="player", fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
     private Set<GamePlayer> gamePlayers;
 
+    @OneToMany(mappedBy = "player", fetch = FetchType.EAGER)
+    Set<Score> scores = new HashSet<>();
+
     // You must define a default (no-argument) constructor for any entity class. That's what JPA will call to create new instances
-    public Player() {};
+    public Player() { };
 
     public Player(String userName, String email) {
         this.userName = userName;
@@ -37,16 +44,29 @@ public class Player {
     /* getters and setters */
 
     public String getUserName() {
-        return this.userName;
+        return userName;
     }
 
     public void setUserName(String userName) {
         this.userName = userName;
     }
 
+    @JsonIgnore
+    public Set<Score> getScores() {
+        return this.scores;
+    }
+
+    public void setScores(Set<Score> scores) {
+        this.scores = scores;
+    }
+
     public void addGamePlayer(GamePlayer gamePlayer) {
         gamePlayer.setPlayer(this);
         gamePlayers.add(gamePlayer);
+    }
+
+    public Set<GamePlayer> getGamePlayers() {
+        return gamePlayers;
     }
 
     public String getEmail() {
@@ -61,11 +81,19 @@ public class Player {
         return id;
     }
 
-    public Set<GamePlayer> getGamePlayers() {
-        return gamePlayers;
+    public void  setId(long id) {
+        this.id = id;
     }
 
-    public void setGamePlayers(Set<GamePlayer> gamePlayers) {
-        this.gamePlayers = gamePlayers;
+    public String toString() {
+        return userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

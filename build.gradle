@@ -5,6 +5,8 @@ plugins {
 	id("com.github.node-gradle.node") version "2.2.0"
 }
 
+apply plugin: 'io.spring.dependency-management'
+
 group = 'com.codeoftheweb'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
