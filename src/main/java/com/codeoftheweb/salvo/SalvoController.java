@@ -161,6 +161,7 @@ public class SalvoController {
 
             Map<String, Object> shipMap = new HashMap<>();
 
+            shipMap.put("salvo_id", salvo.getId());
             shipMap.put("turn", salvo.getTurn());
             shipMap.put("location", salvo.getLocation());
             salvosList.add(shipMap);

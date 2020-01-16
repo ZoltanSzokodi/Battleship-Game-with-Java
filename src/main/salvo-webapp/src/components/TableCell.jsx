@@ -15,46 +15,53 @@ const styles = {
   },
   shipHit: {
     backgroundColor: "Crimson"
+  },
+  shipMiss: {
+    backgroundColor: "AliceBlue"
   }
 }
 
 function GameTableCell({ id, tableType, gameViewObj, classes }) {
+  const { tableCell, shipLocation, salvoLocation, shipHit, shipMiss } = classes;
+
+  let ships = [];
+  let salvos = [];
 
   function toggleTableCellClasses(typeOfTable) {
-    const { tableCell, shipLocation, salvoLocation, shipHit } = classes;
 
     if (typeOfTable === "ship") {
-      let myShips = [];
-      let opponentSalvos = [];
 
       gameViewObj.ships.forEach(ship => (
-        myShips.push(...ship.location)
+        ships.push(...ship.location)
       ))
       gameViewObj.opponent_info.opponent_salvos.forEach(salvo => (
-        opponentSalvos.push(...salvo.location)
+        salvos.push(...salvo.location)
       ))
 
-      if (myShips.includes(id)) {
-        if (opponentSalvos.includes(id)) {
+      if (ships.includes(id)) {
+        if (salvos.includes(id)) {
           return shipHit;
         }
         return shipLocation;
+      } else if (!ships.includes(id)) {
+        if (salvos.includes(id)) {
+          return shipMiss;
+        }
       }
       return tableCell;
-    } else {
-      let mySalvos = [];
+
+    } else if (typeOfTable === "salvo") {
 
       gameViewObj.salvos.forEach(salvo => (
-        mySalvos.push(...salvo.location)
+        salvos.push(...salvo.location)
       ))
 
-      if (mySalvos.includes(id)) {
+      if (salvos.includes(id)) {
         return salvoLocation;
       }
       return tableCell;
     }
   }
-
   return <td className={toggleTableCellClasses(tableType)}></td>;
 }
 
