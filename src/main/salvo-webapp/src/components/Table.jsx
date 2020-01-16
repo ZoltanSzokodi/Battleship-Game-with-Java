@@ -1,17 +1,26 @@
 import React from 'react'
 import TableRow from './TableRow'
-import '../styles/Table.css'
+import { withStyles } from '@material-ui/styles';
 
-function Table({ gameViewObj, gridType }) {
+const styles = {
+  table: {
+    width: "50rem",
+    height: "50rem",
+    textAlign: "center",
+    borderCollapse: "collapse"
+  }
+}
+
+function Table({ gameViewObj, tableType, classes }) {
 
   const colsArr = ["", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const rowsArr = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
 
   return (
     <React.Fragment>
-      <table className="player-table">
+      <table className={classes.table}>
 
-        <caption>{gridType === "ship" ? "SHIP GRID" : "SALVO GRID"}</caption>
+        <caption>{tableType === "ship" ? "SHIP GRID" : "SALVO GRID"}</caption>
 
         <thead>
           <tr>
@@ -23,7 +32,7 @@ function Table({ gameViewObj, gridType }) {
 
         <tbody>
           {rowsArr.map(row => (
-            <TableRow key={row} th={row} gridType={gridType} gameViewObj={gameViewObj} />
+            <TableRow key={row} th={row} tableType={tableType} gameViewObj={gameViewObj} />
           ))}
         </tbody>
 
@@ -32,4 +41,4 @@ function Table({ gameViewObj, gridType }) {
   )
 }
 
-export default Table;
+export default withStyles(styles)(Table);

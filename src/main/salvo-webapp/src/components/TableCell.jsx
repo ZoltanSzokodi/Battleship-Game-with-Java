@@ -1,23 +1,61 @@
 import React from 'react'
-import '../styles/TableCell.css'
+import { withStyles } from '@material-ui/styles';
 
-function GameTableCell({ id, gridType, gameViewObj }) {
-  // salvo or ship depending on the conditional
-  let locations = [];
-
-  if (gridType === "ship") {
-    gameViewObj.ships.forEach(ship => (
-      locations.push(...ship.location)
-    ))
-  } else {
-    gameViewObj.salvoes.forEach(salvo => (
-      locations.push(...salvo.location)
-    ))
+const styles = {
+  tableCell: {
+    border: "1px solid black",
+    width: "10%",
+    height: "10%"
+  },
+  shipLocation: {
+    backgroundColor: "gray",
+  },
+  salvoLocation: {
+    backgroundColor: "CornflowerBlue"
+  },
+  shipHit: {
+    backgroundColor: "Crimson"
   }
-
-  return <td className="table-cell">
-    {locations.includes(id) && "X"}
-  </td>;
 }
 
-export default GameTableCell;
+function GameTableCell({ id, tableType, gameViewObj, classes }) {
+
+  function toggleTableCellClasses(typeOfTable) {
+    const { tableCell, shipLocation, salvoLocation, shipHit } = classes;
+
+    if (typeOfTable === "ship") {
+      let myShips = [];
+      let opponentSalvos = [];
+
+      gameViewObj.ships.forEach(ship => (
+        myShips.push(...ship.location)
+      ))
+      gameViewObj.opponent_info.opponent_salvos.forEach(salvo => (
+        opponentSalvos.push(...salvo.location)
+      ))
+
+      if (myShips.includes(id)) {
+        if (opponentSalvos.includes(id)) {
+          return shipHit;
+        }
+        return shipLocation;
+      }
+      return tableCell;
+    } else {
+      let mySalvos = [];
+
+      gameViewObj.salvos.forEach(salvo => (
+        mySalvos.push(...salvo.location)
+      ))
+
+      if (mySalvos.includes(id)) {
+        return salvoLocation;
+      }
+      return tableCell;
+    }
+  }
+
+  return <td className={toggleTableCellClasses(tableType)}></td>;
+}
+
+export default withStyles(styles)(GameTableCell);

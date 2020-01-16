@@ -1,9 +1,25 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import Table from './Table'
-import '../styles/GameView.css'
+import { withStyles } from '@material-ui/styles';
 
-function GameView() {
+const styles = {
+  gameViewWrapper: {
+    width: "100vw",
+    height: "100vh",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  tablesContainer: {
+    width: "100%",
+    display: "flex",
+    justifyContent: "space-evenly"
+  }
+}
+
+function GameView({ classes }) {
 
   // extract parameters from the url and place it in a variable
   function getParameterByName(name, url) {
@@ -34,15 +50,15 @@ function GameView() {
   console.log(gameViewObj)
 
   return (
-    <div className="game-wrapper">
+    <div className={classes.gameViewWrapper}>
       {!loading && <h2>Player: {gameViewObj.player_name} Opponent: {gameViewObj.opponent_info.opponent_name}</h2>}
-      <div className="tables-container">
-        {!loading && <Table gridType="ship" gameViewObj={gameViewObj} />}
-        {!loading && <Table gridType="salvo" gameViewObj={gameViewObj} />}
+      <div className={classes.tablesContainer}>
+        {!loading && <Table tableType="ship" gameViewObj={gameViewObj} />}
+        {!loading && <Table tableType="salvo" gameViewObj={gameViewObj} />}
 
       </div>
     </div>
   )
 }
 
-export default GameView;
+export default withStyles(styles)(GameView);

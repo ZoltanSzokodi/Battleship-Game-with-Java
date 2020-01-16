@@ -119,7 +119,7 @@ public class SalvoController {
             gamePlayerMap.put("gamePlayer_ID", gamePlayerRepository.getOne(gamePlayer_ID).getId());
             gamePlayerMap.put("player_name", gamePlayerRepository.getOne(gamePlayer_ID).getPlayer().getUserName());
             gamePlayerMap.put("ships", getGamePlayerShips(gamePlayerRepository.getOne(gamePlayer_ID)));
-            gamePlayerMap.put("salvoes", getGamePlayerSalvoes(gamePlayerRepository.getOne(gamePlayer_ID)));
+            gamePlayerMap.put("salvos", getGamePlayerSalvos(gamePlayerRepository.getOne(gamePlayer_ID)));
             //gpOBJ.put("gamePlayer", gamePlayerMap);
 
             // opponent information used for development purposes
@@ -153,19 +153,19 @@ public class SalvoController {
 
     // method to return all of the shots from a specific gamePlayer. To use in other methods
     // request mapping API endpoints
-    public List<Object> getGamePlayerSalvoes(GamePlayer gamePlayer) {
+    public List<Object> getGamePlayerSalvos(GamePlayer gamePlayer) {
 
-        List<Object> salvoesList = new ArrayList<>();
+        List<Object> salvosList = new ArrayList<>();
 
-        gamePlayer.getSalvoes().stream().sorted(Comparator.comparing(Salvo::getTurn)).forEach(salvo -> {
+        gamePlayer.getSalvos().stream().sorted(Comparator.comparing(Salvo::getTurn)).forEach(salvo -> {
 
             Map<String, Object> shipMap = new HashMap<>();
 
             shipMap.put("turn", salvo.getTurn());
             shipMap.put("location", salvo.getLocation());
-            salvoesList.add(shipMap);
+            salvosList.add(shipMap);
         });
-        return salvoesList;
+        return salvosList;
     }
 
     // method to return information about a given gamePlayer's opponents.
@@ -179,8 +179,8 @@ public class SalvoController {
 
                 opponentMap.put("gamePlayer_ID", opponent.getId());
                 opponentMap.put("opponent_name", opponent.getPlayer().getUserName());
-                opponentMap.put("opponent_salvoes", getGamePlayerSalvoes(opponent));
-                opponentMap.put("opponent_ships", getGamePlayerShips(opponent));
+                opponentMap.put("opponent_salvos", getGamePlayerSalvos(opponent));
+                // opponentMap.put("opponent_ships", getGamePlayerShips(opponent));
             }
         });
         return opponentMap;
