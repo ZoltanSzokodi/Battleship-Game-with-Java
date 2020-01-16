@@ -8,60 +8,60 @@ const styles = {
     height: "10%"
   },
   shipLocation: {
-    backgroundColor: "gray",
+    backgroundColor: "Navy",
   },
   salvoLocation: {
-    backgroundColor: "CornflowerBlue"
+    backgroundColor: "LightSkyBlue"
   },
   shipHit: {
-    backgroundColor: "Crimson"
+    backgroundColor: "LightCoral"
   },
   shipMiss: {
-    backgroundColor: "AliceBlue"
+    backgroundColor: "LightBlue"
   }
 }
 
-function GameTableCell({ id, tableType, gameViewObj, classes }) {
-  const { tableCell, shipLocation, salvoLocation, shipHit, shipMiss } = classes;
+function GameTableCell({
+  id,
+  tableType,
+  playerSalvos,
+  playerShips,
+  opponentSalvos,
+  classes
+}) {
 
-  let ships = [];
-  let salvos = [];
+  const {
+    tableCell,
+    shipLocation,
+    salvoLocation,
+    shipHit,
+    shipMiss
+  } = classes;
 
   function toggleTableCellClasses(typeOfTable) {
 
     if (typeOfTable === "ship") {
 
-      gameViewObj.ships.forEach(ship => (
-        ships.push(...ship.location)
-      ))
-      gameViewObj.opponent_info.opponent_salvos.forEach(salvo => (
-        salvos.push(...salvo.location)
-      ))
-
-      if (ships.includes(id)) {
-        if (salvos.includes(id)) {
-          return shipHit;
-        }
+      if (playerShips.includes(id)) {
+        // show player ship's location grid which has been hit by opponent
+        if (opponentSalvos.includes(id)) return shipHit;
+        // show player ships
         return shipLocation;
-      } else if (!ships.includes(id)) {
-        if (salvos.includes(id)) {
-          return shipMiss;
-        }
+
+      } else if (!playerShips.includes(id)) {
+        // show missed shots of opponent on player's table
+        if (opponentSalvos.includes(id)) return shipMiss;
       }
       return tableCell;
 
     } else if (typeOfTable === "salvo") {
 
-      gameViewObj.salvos.forEach(salvo => (
-        salvos.push(...salvo.location)
-      ))
-
-      if (salvos.includes(id)) {
-        return salvoLocation;
-      }
+      // show player's salvos on opponent's table
+      if (playerSalvos.includes(id)) return salvoLocation;
       return tableCell;
     }
   }
+
   return <td className={toggleTableCellClasses(tableType)}></td>;
 }
 
