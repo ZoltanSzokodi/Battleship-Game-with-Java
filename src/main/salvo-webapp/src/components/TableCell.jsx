@@ -24,10 +24,8 @@ const styles = {
 function GameTableCell({
   id,
   tableType,
-  playerSalvos,
-  playerShips,
-  opponentSalvos,
-  classes
+  classes,
+  toggleCellClass
 }) {
 
   const {
@@ -38,31 +36,10 @@ function GameTableCell({
     shipMiss
   } = classes;
 
-  function toggleTableCellClasses(typeOfTable) {
-
-    if (typeOfTable === "ship") {
-
-      if (playerShips.includes(id)) {
-        // show player ship's location grid which has been hit by opponent
-        if (opponentSalvos.includes(id)) return shipHit;
-        // show player ships
-        return shipLocation;
-
-      } else if (!playerShips.includes(id)) {
-        // show missed shots of opponent on player's table
-        if (opponentSalvos.includes(id)) return shipMiss;
-      }
-      return tableCell;
-
-    } else if (typeOfTable === "salvo") {
-
-      // show player's salvos on opponent's table
-      if (playerSalvos.includes(id)) return salvoLocation;
-      return tableCell;
-    }
-  }
-
-  return <td className={toggleTableCellClasses(tableType)}></td>;
+  return <td className={
+    toggleCellClass(tableType, shipHit, shipMiss, shipLocation, salvoLocation, tableCell, id)}>
+    
+  </td>;
 }
 
 export default withStyles(styles)(GameTableCell);

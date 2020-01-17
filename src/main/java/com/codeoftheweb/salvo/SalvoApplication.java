@@ -147,7 +147,7 @@ public class SalvoApplication {
 			gamePlayer1.addSalvo(salvo5);
 
 			Salvo salvo6 = new Salvo(3);
-			salvo6.setLocation((Arrays.asList("D2", "D8")));
+			salvo6.setLocation((Arrays.asList("C1", "D8")));
 			gamePlayer2.addSalvo(salvo6);
 
 			salvoRepository.save(salvo1);

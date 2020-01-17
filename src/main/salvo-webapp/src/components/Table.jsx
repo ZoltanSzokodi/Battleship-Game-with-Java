@@ -11,24 +11,13 @@ const styles = {
   }
 }
 
-function Table({ gameViewObj, tableType, classes }) {
-
-  const colsArr = ["", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  const rowsArr = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
-
-  let playerShips = [];
-  let playerSalvos = [];
-  let opponentSalvos = [];
-
-  gameViewObj.ships.forEach(ship => (
-    playerShips.push(...ship.location)
-  ))
-  gameViewObj.opponent_info.opponent_salvos.forEach(salvo => (
-    opponentSalvos.push(...salvo.location)
-  ))
-  gameViewObj.salvos.forEach(salvo => (
-    playerSalvos.push(...salvo.location)
-  ))
+function Table({
+  tableType,
+  classes,
+  colsArr,
+  rowsArr,
+  toggleCellClass
+}) {
 
   return (
     <React.Fragment>
@@ -45,16 +34,17 @@ function Table({ gameViewObj, tableType, classes }) {
         </thead>
 
         <tbody>
+
           {rowsArr.map(row => (
             <TableRow
               key={row}
               th={row}
               tableType={tableType}
-              playerShips={playerShips}
-              playerSalvos={playerSalvos}
-              opponentSalvos={opponentSalvos}
-            />
-          ))}
+              toggleCellClass={toggleCellClass}
+            //showTurn={showTurn}
+            />)
+          )}
+
         </tbody>
 
       </table>

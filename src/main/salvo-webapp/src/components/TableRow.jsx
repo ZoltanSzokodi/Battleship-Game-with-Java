@@ -3,10 +3,8 @@ import TableCell from './TableCell'
 
 function TableRow({
   th,
-  playerSalvos,
-  playerShips,
-  opponentSalvos,
-  tableType
+  tableType,
+  toggleCellClass
 }) {
   // const cellsLength = Array.from(Array(10).keys());
   const cellsArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
@@ -19,11 +17,10 @@ function TableRow({
           key={th + cell}
           id={th + cell}
           tableType={tableType}
-          playerShips={playerShips}
-          playerSalvos={playerSalvos}
-          opponentSalvos={opponentSalvos}
-        />
-      ))}
+          toggleCellClass={toggleCellClass}
+        //showTurn={showTurn}
+        />)
+      )}
     </tr>
   )
 }
