@@ -39,6 +39,7 @@ function TablesContainer({ gameViewObj, classes }) {
       salvos.forEach(salvo => (
         playerSalvosArr.push(...salvo.location)
       ))
+
       opponent_info.opponent_salvos.forEach(salvo => (
         opponentSalvosArr.push(...salvo.location)
       ))
@@ -61,24 +62,20 @@ function TablesContainer({ gameViewObj, classes }) {
     if (typeOfTable === "ship") {
       if (playerShips.includes(idx)) {
         // show player ship's location grid which has been hit by opponent
-        if (opponentSalvos.includes(idx)) return hitClass;
-        // show player ships
-        return shipLocationClass;
-
-      } else if (!playerShips.includes(idx)) {
-        // show missed shots of opponent on player's table
-        if (opponentSalvos.includes(idx)) return missClass;
+        return opponentSalvos.includes(idx) ? hitClass : shipLocationClass
       }
-      return emptyCellClass;
-
-    } else if (typeOfTable === "salvo") {
+      else if (!playerShips.includes(idx)) {
+        // show missed shots of opponent on player's table
+        return opponentSalvos.includes(idx) ? missClass : emptyCellClass
+      }
+    }
+    else if (typeOfTable === "salvo") {
       // show player's salvos on opponent's table
-      if (playerSalvos.includes(idx)) return salvoLocationClass;
-      return emptyCellClass;
+      return playerSalvos.includes(idx) ? salvoLocationClass : emptyCellClass
     }
   }
 
-  console.log(playerShips)
+  console.log(playerSalvos)
 
   return (
     <React.Fragment>

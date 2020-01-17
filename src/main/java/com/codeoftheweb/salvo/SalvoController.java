@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 // The controller holds the methods to handle requests to and from the API.
 @CrossOrigin(origins = "http://localhost:3000")
@@ -34,10 +35,10 @@ public class SalvoController {
 
     // structuring the api route for all the games
     @RequestMapping("/games")
-    public List<Map> getGames() {
+    public Map<String, Object> getGames() {
 
         // this map contains the games list - top level map (object)
-        //Map<String, Object> games = new LinkedHashMap<>();
+        Map<String, Object> games = new LinkedHashMap<>();
 
         // this list contains all the individual game maps (objects)
         List<Map> gamesList = new ArrayList<>();
@@ -97,15 +98,15 @@ public class SalvoController {
             gamesList.add(gameMap);
         });
         // add the gamesList to the games map
-        //games.put("games", gamesList);
+        games.put("games", gamesList);
+        games.put("leaderBoard", getLeaderBoard());
 
         // FOR TESTING - users currently playing
         // games.put("players", playersSet);
-
-        return gamesList;
+        return games;
     }
 
-    // API end point to see the relevent information about each game they are in, including
+    // API end point to see the relevant information about each game they are in, including
     // shots, turns, score, etc. This information is scoped with authentication to
     // prevent players from seeing opposing players information
     @RequestMapping("/game_view/{gamePlayer_ID}")
@@ -185,5 +186,23 @@ public class SalvoController {
             }
         });
         return opponentMap;
+    }
+
+    public List<Object> getLeaderBoard() {
+        List<Object> scoreList = new ArrayList<>();
+
+        playerRepository.findAll().forEach(player -> {
+
+            Map<String, Object> playersScore = new LinkedHashMap<>();
+
+            playersScore.put("player_name", player.getUserName());
+            playersScore.put("total_points", player.getScores().stream().map(Score::getScoreValue).reduce((double) 0, Double::sum));
+            playersScore.put("games_won", player.getScores().stream().filter(score -> score.getScoreValue() == 1).count());
+            playersScore.put("games_lost", player.getScores().stream().filter(score -> score.getScoreValue() == 0).count());
+            playersScore.put("tied_games", player.getScores().stream().filter(score -> score.getScoreValue() == 0.5).count());
+
+            scoreList.add(playersScore);
+        });
+        return scoreList;
     }
 }

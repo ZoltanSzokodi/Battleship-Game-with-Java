@@ -41,8 +41,10 @@ public class SalvoApplication {
 			playerRepository.save(player2);
 
 			Game game1 = new Game();
+			Game game2 = new Game();
 
 			gameRepository.save(game1);
+			gameRepository.save(game2);
 
 			GamePlayer gamePlayer1 = new GamePlayer(game1, player1);
 			GamePlayer gamePlayer2 = new GamePlayer(game1, player2);
@@ -158,11 +160,16 @@ public class SalvoApplication {
 			salvoRepository.save(salvo6);
 
 
-			Score score1 = new Score(player1, game1, 1.0);
-			Score score2 = new Score(player2, game1, 0.0);
+			Score score1 = new Score(player1, game1, .5);
+			Score score2 = new Score(player2, game1, .5);
+
+			Score score3 = new Score(player1, game2, 1.0);
+			Score score4 = new Score(player2, game2, 0.0);
 
 			scoreRepository.save(score1);
 			scoreRepository.save(score2);
+			scoreRepository.save(score3);
+			scoreRepository.save(score4);
 		};
 	}
 }

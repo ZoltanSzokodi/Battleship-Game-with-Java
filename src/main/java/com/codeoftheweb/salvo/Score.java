@@ -69,8 +69,8 @@ public class Score {
     public String toString() {
         return "Score{" +
                 "id=" + id +
-                ", scoreValue=" + scoreValue +
-                ", finishDate=" + gameFinished +
+                ", score_value=" + scoreValue +
+                ", finish_date=" + gameFinished +
                 ", player=" + player +
                 ", game=" + game +
                 '}';
