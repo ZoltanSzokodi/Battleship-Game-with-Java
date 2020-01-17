@@ -68,6 +68,7 @@ public class SalvoController {
 
                 // add the gamePlayer_ID key - value pair to the gamePlayer map
                 gamePlayerMap.put("gamePlayer_ID", currentGamePlayer.getId());
+                // gamePlayerMap.put("score", currentGamePlayer.getScoresFromGamePlayer(currentGamePlayer));
 
                 // loop through the players in each game
                 if (currentGame.getGamePlayers().contains(currentGamePlayer)) {
@@ -114,22 +115,16 @@ public class SalvoController {
 
             Map<String, Object> gamePlayerMap = new LinkedHashMap<>();
 
-            //Map<String, Object> gpOBJ = new LinkedHashMap<>();
-
             // make a map of a game players game information.
             gamePlayerMap.put("gamePlayer_ID", gamePlayerRepository.getOne(gamePlayer_ID).getId());
             gamePlayerMap.put("player_name", gamePlayerRepository.getOne(gamePlayer_ID).getPlayer().getUserName());
             gamePlayerMap.put("ships", getGamePlayerShips(gamePlayerRepository.getOne(gamePlayer_ID)));
             gamePlayerMap.put("salvos", getGamePlayerSalvos(gamePlayerRepository.getOne(gamePlayer_ID)));
-            //gpOBJ.put("gamePlayer", gamePlayerMap);
 
             // opponent information used for development purposes
-            //Map<String, Object> gpViewMap = new HashMap<>();
             gamePlayerMap.put("opponent_info", getOpponentInfo(gamePlayerRepository.getOne(gamePlayer_ID)));
-            //gpViewMap.put("gamePlayer", gpOBJ);
 
             return gamePlayerMap;
-
     }
 
     // method to return all of the ships from a specific gamePlayer. To use in other methods

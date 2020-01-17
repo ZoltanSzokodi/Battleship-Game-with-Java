@@ -33,12 +33,19 @@ public class SalvoApplication {
 
 			Player player1 = new Player("Peter", "peterGriffin@email.com");
 			Player player2 = new Player("Glenn", "glennQuagmire@email.com");
+			Player player3 = new Player("Joe", "joeSwanson@email.com");
+			Player player4 = new Player("Cleveland", "clevelandBrown@email.com");
 
 			player1.setPassword("booze");
-			player2.setPassword("police");
+			player2.setPassword("giggity");
+			player3.setPassword("police");
+			player4.setPassword("loretta");
+
 
 			playerRepository.save(player1);
 			playerRepository.save(player2);
+			playerRepository.save(player3);
+			playerRepository.save(player4);
 
 			Game game1 = new Game();
 			Game game2 = new Game();
@@ -48,9 +55,13 @@ public class SalvoApplication {
 
 			GamePlayer gamePlayer1 = new GamePlayer(game1, player1);
 			GamePlayer gamePlayer2 = new GamePlayer(game1, player2);
+			GamePlayer gamePlayer3 = new GamePlayer(game2, player3);
+			GamePlayer gamePlayer4 = new GamePlayer(game2, player4);
 
 			gamePlayerRepository.save(gamePlayer1);
 			gamePlayerRepository.save(gamePlayer2);
+			gamePlayerRepository.save(gamePlayer3);
+			gamePlayerRepository.save(gamePlayer4);
 
 
 			Ship ship1 = new Ship("aircraft carrier");
@@ -163,8 +174,8 @@ public class SalvoApplication {
 			Score score1 = new Score(player1, game1, .5);
 			Score score2 = new Score(player2, game1, .5);
 
-			Score score3 = new Score(player1, game2, 1.0);
-			Score score4 = new Score(player2, game2, 0.0);
+			Score score3 = new Score(player3, game2, 1.0);
+			Score score4 = new Score(player4, game2, 0.0);
 
 			scoreRepository.save(score1);
 			scoreRepository.save(score2);

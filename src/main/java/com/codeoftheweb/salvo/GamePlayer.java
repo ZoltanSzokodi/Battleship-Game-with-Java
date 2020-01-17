@@ -93,9 +93,9 @@ public class GamePlayer {
         salvos.add(salvo);
     }
 
-    /*public Set<Score> getScoresFromGamePlayer (GamePlayer gamePlayer) {
+    public Set<Score> getScoresFromGamePlayer (GamePlayer gamePlayer) {
         return gamePlayer.getPlayer().getScores();
-    }*/
+    }
 
     public long getId() {
         return id;
