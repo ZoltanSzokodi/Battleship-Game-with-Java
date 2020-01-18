@@ -12,15 +12,19 @@ const styles = {
 
 function TablesContainer({ gameViewObj, classes }) {
 
-  const colsArr = ["", 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-  const rowsArr = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+  const colsArr = [];
+  const rowsArr = [];
+  // column heads
+  for (let i = 0; i <= 10; i++) { i === 0 ? colsArr.push("") : colsArr.push(i) }
+  // row heads
+  for (let i = 65; i <= 74; i++) { rowsArr.push(String.fromCharCode(i)) }
 
   const {
     ships,
     salvos,
     //gamePlayer_ID,
-    player_name,
-    opponent_info
+    playerName,
+    opponentInfo
   } = gameViewObj;
 
   const [playerShips, setPlayerShips] = useState([]);
@@ -40,7 +44,7 @@ function TablesContainer({ gameViewObj, classes }) {
         playerSalvosArr.push(...salvo.location)
       ))
 
-      opponent_info.opponent_salvos.forEach(salvo => (
+      opponentInfo.opponentSalvos.forEach(salvo => (
         opponentSalvosArr.push(...salvo.location)
       ))
       setPlayerShips(playerShipsArr)
@@ -48,7 +52,7 @@ function TablesContainer({ gameViewObj, classes }) {
       setOpponentSalvos(opponentSalvosArr)
     }
     extractGameViewData()
-  }, [ships, salvos, opponent_info.opponent_salvos])
+  }, [ships, salvos, opponentInfo.opponentSalvos])
 
   function toggleCellClass(
     typeOfTable,
@@ -79,7 +83,7 @@ function TablesContainer({ gameViewObj, classes }) {
 
   return (
     <React.Fragment>
-      <h2>Player: {player_name} Opponent: {opponent_info.opponent_name}</h2>
+      <h2>Player: {playerName} Opponent: {opponentInfo.opponentName}</h2>
 
       <div className={classes.tablesContainer}>
 

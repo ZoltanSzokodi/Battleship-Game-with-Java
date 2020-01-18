@@ -20,7 +20,7 @@ public class Player {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
 
-    private long id;
+    private long ID;
     private String userName;
     private String password;
     private String email;
@@ -77,12 +77,12 @@ public class Player {
         this.email = email;
     }
 
-    public long getId() {
-        return id;
+    public long getID() {
+        return ID;
     }
 
-    public void  setId(long id) {
-        this.id = id;
+    public void setID(long ID) {
+        this.ID = ID;
     }
 
     public String toString() {

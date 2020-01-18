@@ -13,12 +13,12 @@ public class Salvo {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
-    private long id;
+    private long ID;
 
     private Integer turn;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "gamePlayer_id")
+    @JoinColumn(name = "gamePlayerID")
     private GamePlayer gamePlayer;
 
     @ElementCollection
@@ -42,8 +42,8 @@ public class Salvo {
         return this.gamePlayer;
     }
 
-    public long getId() {
-        return id;
+    public long getID() {
+        return ID;
     }
 
     public Integer getTurn() {
@@ -61,7 +61,7 @@ public class Salvo {
     @Override
     public String toString() {
         return "Salvo{" +
-                "id=" + id +
+                "ID=" + ID +
                 ", turn=" + turn +
                 ", salvoLocations=" + location +
                 ", gamePlayer=" + gamePlayer +

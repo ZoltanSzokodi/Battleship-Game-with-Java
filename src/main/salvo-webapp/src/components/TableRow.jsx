@@ -6,8 +6,10 @@ function TableRow({
   tableType,
   toggleCellClass
 }) {
-  // const cellsLength = Array.from(Array(10).keys());
-  const cellsArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+  const cellsArr = []
+  // 10 cells in a row
+  for (let i = 1; i <= 10; i++) { cellsArr.push(i) }
 
   return (
     <tr>

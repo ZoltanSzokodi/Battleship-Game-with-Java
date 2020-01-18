@@ -5,7 +5,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource
 public interface GamePlayerRepository extends JpaRepository<GamePlayer, Long> {
-
-    GamePlayer findById(long id);
-    boolean existsById(long id);
+    GamePlayer findByID(long ID);
+    boolean existsByID(long ID);
 }

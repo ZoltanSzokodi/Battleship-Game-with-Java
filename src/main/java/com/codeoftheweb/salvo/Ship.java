@@ -11,20 +11,20 @@ public class Ship {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
-    private long id;
+    private long ID;
 
     private String shipType;
     private boolean sunk = false;
 
     // one gamePlayer can have many ships
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="gamePlayer_id")
+    @JoinColumn(name = "gamePlayerID")
     private GamePlayer gamePlayer;
 
     // we have a one-to-many relationship between ships and locations
     // Locations are just strings, "h2" and "b3". In Java JPA, you can create a one-to-many relationship from an entity, such as Ship, to a basic data type, such as a location string, using the @ElementCollection annotation
     @ElementCollection
-    @Column(name="location")
+    @Column(name = "location")
     private List<String> location = new ArrayList<>();
 
     public Ship() { }
@@ -43,12 +43,12 @@ public class Ship {
         this.gamePlayer = gamePlayer;
     }
 
-    public long getId() {
-        return id;
+    public long getID() {
+        return ID;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setID(long ID) {
+        this.ID = ID;
     }
 
     public List<String> getLocation() {
@@ -78,7 +78,7 @@ public class Ship {
     @Override
     public String toString() {
         return "Ship{" +
-                "id=" + id +
+                "ID=" + ID +
                 ", shipType='" + shipType + '\'' +
                 ", gamePlayer=" + this.gamePlayer +
                 ", location=" + location +

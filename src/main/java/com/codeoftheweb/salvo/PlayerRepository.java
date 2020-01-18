@@ -17,7 +17,6 @@ import java.util.List;
 @RepositoryRestResource
 // ~ turns PersonRepository into a Rest Repository.
 public interface PlayerRepository extends JpaRepository<Player, Long> {
-
     Player findUserByUserName(String userName);
-    Player findById(Integer id);
+    Player findByID(Integer ID);
 }

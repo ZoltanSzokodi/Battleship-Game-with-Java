@@ -15,17 +15,17 @@ public class GamePlayer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
-    private long id;
+    private long ID;
     private long gameCreated =  new Date().getTime();
 
     // GamePlayer has many-to-one relationship with Player
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="player_id")
+    @JoinColumn(name="playerID")
     private Player player;
 
     // GamePlayer has many-to-one relationship with Game
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="game_id")
+    @JoinColumn(name="gameID")
     private Game game;
 
     // A gamePlayer has many ships
@@ -94,21 +94,21 @@ public class GamePlayer {
     }
 
     public Set<Score> getScoresFromGamePlayer (GamePlayer gamePlayer) {
-        return gamePlayer.getPlayer().getScores();
+        return gamePlayer.getGame().getScores();
     }
 
-    public long getId() {
-        return id;
+    public long getID() {
+        return ID;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setID(long ID) {
+        this.ID = ID;
     }
 
     @Override
     public String toString() {
         return "GamePlayer{" +
-                "id=" + id +
+                "ID=" + ID +
                 ", player=" + this.player +
                 ", game=" + this.game +
                 ", ships=" + this.ships +

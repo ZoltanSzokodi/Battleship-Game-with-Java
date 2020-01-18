@@ -49,19 +49,25 @@ public class SalvoApplication {
 
 			Game game1 = new Game();
 			Game game2 = new Game();
+			Game game3 = new Game();
 
 			gameRepository.save(game1);
 			gameRepository.save(game2);
+			gameRepository.save(game3);
 
 			GamePlayer gamePlayer1 = new GamePlayer(game1, player1);
 			GamePlayer gamePlayer2 = new GamePlayer(game1, player2);
 			GamePlayer gamePlayer3 = new GamePlayer(game2, player3);
 			GamePlayer gamePlayer4 = new GamePlayer(game2, player4);
+			GamePlayer gamePlayer5 = new GamePlayer(game3, player3);
+			GamePlayer gamePlayer6 = new GamePlayer(game3, player4);
 
 			gamePlayerRepository.save(gamePlayer1);
 			gamePlayerRepository.save(gamePlayer2);
 			gamePlayerRepository.save(gamePlayer3);
 			gamePlayerRepository.save(gamePlayer4);
+			gamePlayerRepository.save(gamePlayer5);
+			gamePlayerRepository.save(gamePlayer6);
 
 
 			Ship ship1 = new Ship("aircraft carrier");
@@ -177,10 +183,15 @@ public class SalvoApplication {
 			Score score3 = new Score(player3, game2, 1.0);
 			Score score4 = new Score(player4, game2, 0.0);
 
+			Score score5 = new Score(player3, game3, 1.0);
+			Score score6 = new Score(player4, game3, 0.0);
+
 			scoreRepository.save(score1);
 			scoreRepository.save(score2);
 			scoreRepository.save(score3);
 			scoreRepository.save(score4);
+			scoreRepository.save(score5);
+			scoreRepository.save(score6);
 		};
 	}
 }

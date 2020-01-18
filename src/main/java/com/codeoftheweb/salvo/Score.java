@@ -11,17 +11,17 @@ public class Score {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
-    private long id;
+    private long ID;
 
     private Double scoreValue;
     private long gameFinished;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "player_id")
+    @JoinColumn(name = "playerID")
     private Player player;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="game_id")
+    @JoinColumn(name="gameID")
     private Game game;
 
     public Score() { }
@@ -49,12 +49,12 @@ public class Score {
         this.game = game;
     }
 
-    public long getId() {
-        return id;
+    public long getID() {
+        return ID;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setID(long ID) {
+        this.ID = ID;
     }
 
     public long getGameFinished() {
@@ -68,9 +68,9 @@ public class Score {
     @Override
     public String toString() {
         return "Score{" +
-                "id=" + id +
-                ", score_value=" + scoreValue +
-                ", finish_date=" + gameFinished +
+                "ID=" + ID +
+                ", scoreValue=" + scoreValue +
+                ", gameFinished=" + gameFinished +
                 ", player=" + player +
                 ", game=" + game +
                 '}';

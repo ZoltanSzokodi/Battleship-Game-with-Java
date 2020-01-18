@@ -37,15 +37,9 @@ public class SalvoController {
     @RequestMapping("/games")
     public Map<String, Object> getGames() {
 
-        // this map contains the games list - top level map (object)
         Map<String, Object> games = new LinkedHashMap<>();
 
-        // this list contains all the individual game maps (objects)
         List<Map> gamesList = new ArrayList<>();
-
-        // this set contains all the users currently playing. Each user might be involved in multiple games.
-        // THIS SET IS FOR TESTING PURPOSES
-        Set<Map> playersSet = new HashSet<>();
 
         // loop through every game in the database
         gameRepository.findAll().forEach(currentGame -> {
@@ -56,9 +50,10 @@ public class SalvoController {
             List<Map> gamePlayersList = new ArrayList<>();
 
             // add the key value pairs to the individual game maps - first nesting within a game map
-            gameMap.put("game_ID", currentGame.getId());
-            gameMap.put("game_created", currentGame.getGameCreated());
+            gameMap.put("gameID", currentGame.getID());
+            gameMap.put("gameCreated", currentGame.getGameCreated());
             gameMap.put("gamePlayers", gamePlayersList);
+            gameMap.put("scores", currentGame.getScores());
 
             // loop through the gamePlayers in each game
             gamePlayerRepository.findAll().forEach(currentGamePlayer -> {
@@ -67,8 +62,7 @@ public class SalvoController {
                 Map<String, Object> gamePlayerMap = new LinkedHashMap<>();
 
                 // add the gamePlayer_ID key - value pair to the gamePlayer map
-                gamePlayerMap.put("gamePlayer_ID", currentGamePlayer.getId());
-                // gamePlayerMap.put("score", currentGamePlayer.getScoresFromGamePlayer(currentGamePlayer));
+                gamePlayerMap.put("gamePlayerID", currentGamePlayer.getID());
 
                 // loop through the players in each game
                 if (currentGame.getGamePlayers().contains(currentGamePlayer)) {
@@ -80,12 +74,9 @@ public class SalvoController {
                         if (currentGamePlayer.getPlayer().getUserName().equals(currentPlayer.getUserName())) {
 
                             // add the key - value pairs to the player map - second nesting within a game map
-                            player.put("player_ID", currentPlayer.getId());
-                            player.put("player_name", currentPlayer.getUserName());
-                            player.put("player_email", currentPlayer.getEmail());
-
-                            // FOR TESTING - add users currently playing to the playersMapSet
-                            playersSet.add(player);
+                            player.put("playerID", currentPlayer.getID());
+                            player.put("playerName", currentPlayer.getUserName());
+                            player.put("playerEmail", currentPlayer.getEmail());
 
                             // add the player map to the gamePlayer map
                             gamePlayerMap.put("player", player);
@@ -102,27 +93,25 @@ public class SalvoController {
         games.put("games", gamesList);
         games.put("leaderBoard", getLeaderBoard());
 
-        // FOR TESTING - users currently playing
-        // games.put("players", playersSet);
         return games;
     }
 
     // API end point to see the relevant information about each game they are in, including
     // shots, turns, score, etc. This information is scoped with authentication to
     // prevent players from seeing opposing players information
-    @RequestMapping("/game_view/{gamePlayer_ID}")
-    public Map<String, Object> getGameViewForGamePlayer(@PathVariable long gamePlayer_ID) {
+    @RequestMapping("/game_view/{gamePlayerID}")
+    public Map<String, Object> getGameViewForGamePlayer(@PathVariable long gamePlayerID) {
 
             Map<String, Object> gamePlayerMap = new LinkedHashMap<>();
 
             // make a map of a game players game information.
-            gamePlayerMap.put("gamePlayer_ID", gamePlayerRepository.getOne(gamePlayer_ID).getId());
-            gamePlayerMap.put("player_name", gamePlayerRepository.getOne(gamePlayer_ID).getPlayer().getUserName());
-            gamePlayerMap.put("ships", getGamePlayerShips(gamePlayerRepository.getOne(gamePlayer_ID)));
-            gamePlayerMap.put("salvos", getGamePlayerSalvos(gamePlayerRepository.getOne(gamePlayer_ID)));
+            gamePlayerMap.put("gamePlayerID", gamePlayerRepository.getOne(gamePlayerID).getID());
+            gamePlayerMap.put("playerName", gamePlayerRepository.getOne(gamePlayerID).getPlayer().getUserName());
+            gamePlayerMap.put("ships", getGamePlayerShips(gamePlayerRepository.getOne(gamePlayerID)));
+            gamePlayerMap.put("salvos", getGamePlayerSalvos(gamePlayerRepository.getOne(gamePlayerID)));
 
             // opponent information used for development purposes
-            gamePlayerMap.put("opponent_info", getOpponentInfo(gamePlayerRepository.getOne(gamePlayer_ID)));
+            gamePlayerMap.put("opponentInfo", getOpponentInfo(gamePlayerRepository.getOne(gamePlayerID)));
 
             return gamePlayerMap;
     }
@@ -137,7 +126,7 @@ public class SalvoController {
 
             Map<String, Object> shipMap = new LinkedHashMap<>();
 
-            shipMap.put("ship_ID", ship.getId());
+            shipMap.put("shipID", ship.getID());
             shipMap.put("type", ship.getShipType());
             shipMap.put("location", ship.getLocation());
             shipMap.put("sunk", ship.isSunk());
@@ -157,7 +146,7 @@ public class SalvoController {
 
             Map<String, Object> shipMap = new HashMap<>();
 
-            shipMap.put("salvo_id", salvo.getId());
+            shipMap.put("salvoID", salvo.getID());
             shipMap.put("turn", salvo.getTurn());
             shipMap.put("location", salvo.getLocation());
             salvosList.add(shipMap);
@@ -171,12 +160,12 @@ public class SalvoController {
 
         Map<String, Object> opponentMap = new LinkedHashMap<>();
 
-        you.getGame().getGamePlayers().forEach(opponent -> {
-            if (opponent.getId() != you.getId()){
+        you.getGame().getGamePlayers().forEach(player -> {
+            if (player.getID() != you.getID()){
 
-                opponentMap.put("gamePlayer_ID", opponent.getId());
-                opponentMap.put("opponent_name", opponent.getPlayer().getUserName());
-                opponentMap.put("opponent_salvos", getGamePlayerSalvos(opponent));
+                opponentMap.put("gamePlayerID", player.getID());
+                opponentMap.put("opponentName", player.getPlayer().getUserName());
+                opponentMap.put("opponentSalvos", getGamePlayerSalvos(player));
                 // opponentMap.put("opponent_ships", getGamePlayerShips(opponent));
             }
         });
@@ -190,11 +179,11 @@ public class SalvoController {
 
             Map<String, Object> playersScore = new LinkedHashMap<>();
 
-            playersScore.put("player_name", player.getUserName());
-            playersScore.put("total_points", player.getScores().stream().map(Score::getScoreValue).reduce((double) 0, Double::sum));
-            playersScore.put("games_won", player.getScores().stream().filter(score -> score.getScoreValue() == 1).count());
-            playersScore.put("games_lost", player.getScores().stream().filter(score -> score.getScoreValue() == 0).count());
-            playersScore.put("tied_games", player.getScores().stream().filter(score -> score.getScoreValue() == 0.5).count());
+            playersScore.put("playerName", player.getUserName());
+            playersScore.put("totalPoints", player.getScores().stream().map(Score::getScoreValue).reduce((double) 0, Double::sum));
+            playersScore.put("gamesWon", player.getScores().stream().filter(score -> score.getScoreValue() == 1).count());
+            playersScore.put("gamesLost", player.getScores().stream().filter(score -> score.getScoreValue() == 0).count());
+            playersScore.put("tiedGames", player.getScores().stream().filter(score -> score.getScoreValue() == 0.5).count());
 
             scoreList.add(playersScore);
         });

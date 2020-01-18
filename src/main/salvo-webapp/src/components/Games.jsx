@@ -18,21 +18,7 @@ function Games() {
 
   return (
     <div>
-      <h1>Games Data</h1>
-      <ol>
-        {gamesList.map(game => (
-          <li key={uuid()}>
-            <ul>
-              <li>created: {game.created}</li>
-              {game.gamePlayers.map((gamePlayer, i) => (
-                <li key={uuid()}>
-                  player email: {gamePlayer.player.player_email}
-                </li>
-              ))}
-            </ul>
-          </li>
-        ))}
-      </ol>
+
     </div>
   )
 }

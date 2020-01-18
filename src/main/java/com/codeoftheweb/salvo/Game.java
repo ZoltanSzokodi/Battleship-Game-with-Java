@@ -15,7 +15,7 @@ class Game {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
 
-    private long id;
+    private long ID;
     private long gameCreated =  new Date().getTime();
     private boolean finished = false;
 
@@ -43,10 +43,6 @@ class Game {
     }
 
     @JsonIgnore
-    public Set<Score> getScore() {
-        return this.scores;
-    }
-
     public Set<Score> getScores() {
         return scores;
     }
@@ -59,8 +55,8 @@ class Game {
         this.gameCreated = gameTime;
     }
 
-    public long getId() {
-        return this.id;
+    public long getID() {
+        return this.ID;
     }
 
     public Boolean getFinished() {
@@ -77,6 +73,6 @@ class Game {
 
     @Override
     public String toString() {
-        return id + " " + gameCreated;
+        return ID + " " + gameCreated;
     }
 }
