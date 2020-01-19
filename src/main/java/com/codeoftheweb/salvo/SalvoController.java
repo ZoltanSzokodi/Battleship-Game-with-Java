@@ -91,7 +91,7 @@ public class SalvoController {
         });
         // add the gamesList to the games map
         games.put("games", gamesList);
-        games.put("leaderBoard", getLeaderBoard());
+        games.put("leaderboard", getLeaderboard());
 
         return games;
     }
@@ -172,7 +172,7 @@ public class SalvoController {
         return opponentMap;
     }
 
-    public List<Object> getLeaderBoard() {
+    public List<Object> getLeaderboard() {
         List<Object> scoreList = new ArrayList<>();
 
         playerRepository.findAll().forEach(player -> {

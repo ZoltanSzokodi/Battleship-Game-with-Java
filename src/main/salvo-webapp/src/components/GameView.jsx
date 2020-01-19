@@ -28,17 +28,17 @@ function GameView({ classes }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const getGameView = async () => {
+    const getGameViewObj = async () => {
       const url = `http://localhost:8080/api/game_view/${gamePlayerID}`;
 
       try {
         let response = await axios.get(url);
         let data = await response.data;
         setGameViewObj(data);
-        setLoading(loading => !loading)
+        setLoading(false)
       } catch (err) { console.log(err) }
     }
-    getGameView()
+    getGameViewObj()
   }, [gamePlayerID])
 
 

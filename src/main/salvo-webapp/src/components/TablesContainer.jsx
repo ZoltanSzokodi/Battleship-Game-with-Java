@@ -79,7 +79,7 @@ function TablesContainer({ gameViewObj, classes }) {
     }
   }
 
-  console.log(playerSalvos)
+  console.log(gameViewObj)
 
   return (
     <React.Fragment>

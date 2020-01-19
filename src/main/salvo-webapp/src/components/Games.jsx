@@ -1,26 +1,43 @@
 import React, { useEffect, useState } from 'react'
+import LeaderboardContainer from './LeaderboardContainer'
 import axios from 'axios'
-import { uuid } from 'uuidv4'
+import { withStyles } from '@material-ui/styles';
 
-function Games() {
-  const [gamesList, setGamesList] = useState([]);
+const styles = {
+  leaderboardWrapper: {
+    width: "100vw",
+    height: "100vh",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center"
+  }
+}
+
+function Games({ classes }) {
+  const [gamesObj, setGamesObj] = useState({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get('http://localhost:8080/api/games')
-      .then(res => {
-        setGamesList(res.data)
-      })
-      .catch(err => console.log(err))
+    const getGamesObj = async () => {
+      const url = 'http://localhost:8080/api/games';
+
+      try {
+        let response = await axios.get(url)
+        let data = await response.data;
+        setGamesObj(data);
+        setLoading(false);
+      } catch (err) { console.log(err) }
+    }
+    getGamesObj();
   }, [])
 
-  console.log(gamesList)
 
   return (
-    <div>
-
+    <div className={classes.leaderboardWrapper}>
+      {!loading && <LeaderboardContainer gamesObj={gamesObj} />}
     </div>
   )
 }
 
-export default Games
+export default withStyles(styles)(Games);
