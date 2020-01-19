@@ -1,10 +1,21 @@
 import React, { useState, useEffect } from 'react'
 import Leaderboard from './Leaderboard'
+import { withStyles } from '@material-ui/styles';
 
-function LeaderboardContainer({ gamesObj }) {
+const styles = {
+  leaderboardContainer: {
+    width: "100%",
+    height: "auto",
+    display: "flex",
+    justifyContent: "center"
+  }
+};
+
+function LeaderboardContainer({ gamesObj, classes }) {
 
   const [gamesList, setGamesList] = useState([]);
   const [leaderboardList, setLeaderboardList] = useState([]);
+
 
   useEffect(() => {
     const extractGamesData = () => {
@@ -14,14 +25,11 @@ function LeaderboardContainer({ gamesObj }) {
     extractGamesData()
   }, [gamesObj.games, gamesObj.leaderboard])
 
-  // console.log(gamesList)
-  // console.log(leaderboardList)
-
   return (
-    <div>
+    <div className={classes.leaderboardContainer}>
       <Leaderboard leaderboardList={leaderboardList} />
     </div>
-  )
+  );
 }
 
-export default LeaderboardContainer;
+export default withStyles(styles)(LeaderboardContainer);

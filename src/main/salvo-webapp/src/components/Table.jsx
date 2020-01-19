@@ -9,7 +9,7 @@ const styles = {
     textAlign: "center",
     borderCollapse: "collapse"
   }
-}
+};
 
 function Table({
   tableType,
@@ -20,36 +20,33 @@ function Table({
 }) {
 
   return (
-    <React.Fragment>
-      <table className={classes.table}>
+    <table className={classes.table}>
 
-        <caption>{tableType === "ship" ? "SHIP GRID" : "SALVO GRID"}</caption>
+      <caption>{tableType === "ship" ? "SHIP GRID" : "SALVO GRID"}</caption>
 
-        <thead>
-          <tr>
-            {colsArr.map(col => (
-              <th key={col}>{col}</th>
-            ))}
-          </tr>
-        </thead>
+      <thead>
+        <tr>
+          {colsArr.map(col => (
+            <th key={col}>{col}</th>
+          ))}
+        </tr>
+      </thead>
 
-        <tbody>
+      <tbody>
 
-          {rowsArr.map(row => (
-            <TableRow
-              key={row}
-              th={row}
-              tableType={tableType}
-              toggleCellClass={toggleCellClass}
-            //showTurn={showTurn}
-            />)
-          )}
+        {rowsArr.map(row => (
+          <TableRow
+            key={row}
+            th={row}
+            tableType={tableType}
+            toggleCellClass={toggleCellClass}
+          />
+        )
+        )}
 
-        </tbody>
-
-      </table>
-    </React.Fragment>
-  )
+      </tbody>
+    </table>
+  );
 }
 
 export default withStyles(styles)(Table);

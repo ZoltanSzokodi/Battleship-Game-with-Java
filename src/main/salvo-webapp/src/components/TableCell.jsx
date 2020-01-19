@@ -38,7 +38,6 @@ function GameTableCell({
 
   return <td className={
     toggleCellClass(tableType, shipHit, shipMiss, shipLocation, salvoLocation, tableCell, id)}>
-    
   </td>;
 }
 

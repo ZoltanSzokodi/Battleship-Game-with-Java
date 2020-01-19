@@ -6,13 +6,11 @@ import { withStyles } from '@material-ui/styles';
 const styles = {
   leaderboardWrapper: {
     width: "100vw",
-    height: "100vh",
+    height: "auto",
     display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
     justifyContent: "center"
   }
-}
+};
 
 function Games({ classes }) {
   const [gamesObj, setGamesObj] = useState({});
@@ -37,7 +35,7 @@ function Games({ classes }) {
     <div className={classes.leaderboardWrapper}>
       {!loading && <LeaderboardContainer gamesObj={gamesObj} />}
     </div>
-  )
+  );
 }
 
 export default withStyles(styles)(Games);

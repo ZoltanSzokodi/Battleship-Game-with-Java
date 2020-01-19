@@ -3,19 +3,32 @@ import LeaderboardRow from './LeaderboardRow'
 import { withStyles } from '@material-ui/styles';
 import { uuid } from 'uuidv4'
 
-const styles = {}
+const styles = {
+  board: {
+    width: "60%",
+    height: "auto",
+    border: "1px solid black",
+    borderCollapse: "collapse",
+    marginTop: "10rem",
+    fontSize: "1.6rem"
+  },
+  '@global': {
+    th: {
+      width: "16.6666%",
+      padding: "1rem",
+      border: "1px solid black",
+    }
+  }
+};
 
 function Leaderboard({ leaderboardList, classes }) {
-
   let sortedLeaderboardList = leaderboardList.sort((a, b) => b.totalPoints - a.totalPoints);
 
-  console.log(sortedLeaderboardList)
-
   return (
-    <table>
-
+    <table className={classes.board}>
       <thead>
         <tr>
+          <th>Position</th>
           <th>Player name</th>
           <th>Total points</th>
           <th>Games won</th>
@@ -31,7 +44,7 @@ function Leaderboard({ leaderboardList, classes }) {
       </tbody>
 
     </table>
-  )
+  );
 }
 
 export default withStyles(styles)(Leaderboard);
