@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 @SpringBootApplication
 public class SalvoApplication {
@@ -71,47 +72,41 @@ public class SalvoApplication {
 
 
 			Ship ship1 = new Ship("aircraft carrier");
-			ship1.setLocation((Arrays.asList("H1", "H2", "H3", "H4", "H5")));
+			ship1.setLocation((Arrays.asList("H1", "H2", "H3", "H4", "H5", "H6")));
 
 			Ship ship2 = new Ship("battleship");
-			ship2.setLocation((Arrays.asList("B3", "B4", "B5", "B6")));
+			ship2.setLocation((Arrays.asList("B3", "B4", "B5", "B6", "B7")));
 
 			Ship ship3 = new Ship("submarine");
-			ship3.setLocation((Arrays.asList("A1", "B1", "C1")));
+			ship3.setLocation((Arrays.asList("A1", "B1", "C1", "D1")));
 
 			Ship ship4 = new Ship("cruiser");
-			ship4.setLocation((Arrays.asList("E3", "E4")));
+			ship4.setLocation((Arrays.asList("E3", "E4", "E5")));
 
-			Ship ship5 = new Ship("cruiser");
+			Ship ship5 = new Ship("destroyer");
 			ship5.setLocation((Arrays.asList("F7", "G7")));
 
-			Ship ship6 = new Ship("destroyer");
-			ship6.setLocation((Arrays.asList("J9", "J10")));
-
-			Ship ship7 = new Ship("destroyer");
-			ship7.setLocation((Arrays.asList("D8", "D9")));
+			Ship ship6 = new Ship("jet");
+			ship6.setLocation((Collections.singletonList("J9")));
 
 
-			Ship ship8 = new Ship("aircraft carrier");
-			ship8.setLocation((Arrays.asList("E9", "F9", "G9", "H9", "I9")));
+			Ship ship7 = new Ship("aircraft carrier");
+			ship7.setLocation((Arrays.asList("E9", "F9", "G9", "H9", "I9", "J9")));
 
-			Ship ship9 = new Ship("battleship");
-			ship9.setLocation((Arrays.asList("D1", "E1", "F1", "G1")));
+			Ship ship8 = new Ship("battleship");
+			ship8.setLocation((Arrays.asList("D1", "E1", "F1", "G1", "H1")));
 
-			Ship ship10 = new Ship("submarine");
-			ship10.setLocation((Arrays.asList("E4", "E5", "E6")));
+			Ship ship9 = new Ship("submarine");
+			ship9.setLocation((Arrays.asList("E4", "E5", "E6", "E7")));
+
+			Ship ship10 = new Ship("cruiser");
+			ship10.setLocation((Arrays.asList("A4", "A5", "A6")));
 
 			Ship ship11 = new Ship("cruiser");
-			ship11.setLocation((Arrays.asList("A4", "A5")));
+			ship11.setLocation((Arrays.asList("G6", "H6")));
 
-			Ship ship12 = new Ship("cruiser");
-			ship12.setLocation((Arrays.asList("G6", "H6")));
-
-			Ship ship13 = new Ship("destroyer");
-			ship13.setLocation((Arrays.asList("C8", "C9")));
-
-			Ship ship14 = new Ship("destroyer");
-			ship14.setLocation((Arrays.asList("I1", "I2")));
+			Ship ship12 = new Ship("jet");
+			ship12.setLocation((Collections.singletonList("C8")));
 
 
 			gamePlayer1.addShip(ship1);
@@ -120,15 +115,13 @@ public class SalvoApplication {
 			gamePlayer1.addShip(ship4);
 			gamePlayer1.addShip(ship5);
 			gamePlayer1.addShip(ship6);
-			gamePlayer1.addShip(ship7);
 
+			gamePlayer2.addShip(ship7);
 			gamePlayer2.addShip(ship8);
 			gamePlayer2.addShip(ship9);
 			gamePlayer2.addShip(ship10);
 			gamePlayer2.addShip(ship11);
 			gamePlayer2.addShip(ship12);
-			gamePlayer2.addShip(ship13);
-			gamePlayer2.addShip(ship14);
 
 			shipRepository.save(ship1);
 			shipRepository.save(ship2);
@@ -142,8 +135,6 @@ public class SalvoApplication {
 			shipRepository.save(ship10);
 			shipRepository.save(ship11);
 			shipRepository.save(ship12);
-			shipRepository.save(ship13);
-			shipRepository.save(ship14);
 
 			Salvo salvo1 = new Salvo(1);
 			salvo1.setLocation((Arrays.asList("E4", "D7")));

@@ -7,7 +7,7 @@ function TableRow({
   toggleCellClass
 }) {
 
-  const cellsArr = []
+  const cellsArr = [];
   // 10 cells in a row
   for (let i = 1; i <= 10; i++) { cellsArr.push(i) }
 
@@ -20,11 +20,10 @@ function TableRow({
           id={th + cell}
           tableType={tableType}
           toggleCellClass={toggleCellClass}
-        //showTurn={showTurn}
         />)
       )}
     </tr>
-  )
+  );
 }
 
 export default TableRow;

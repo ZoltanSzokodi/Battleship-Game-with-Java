@@ -1,11 +1,12 @@
 import React from 'react'
 import { withStyles } from '@material-ui/styles';
+//import hit from '../assets/hit.gif'
 
 const styles = {
   tableCell: {
     border: "1px solid black",
     width: "10%",
-    height: "10%"
+    height: "10%",
   },
   shipLocation: {
     backgroundColor: "Navy",
@@ -14,7 +15,9 @@ const styles = {
     backgroundColor: "LightSkyBlue"
   },
   shipHit: {
-    backgroundColor: "LightCoral"
+    // background: `url(${hit})`,
+    // backgroundSize: "cover"
+    backgroundColor: "red"
   },
   shipMiss: {
     backgroundColor: "LightBlue"
@@ -37,7 +40,8 @@ function GameTableCell({
   } = classes;
 
   return <td className={
-    toggleCellClass(tableType, shipHit, shipMiss, shipLocation, salvoLocation, tableCell, id)}>
+    toggleCellClass(tableType, shipHit, shipMiss, shipLocation, salvoLocation, tableCell, id)
+  }>
   </td>;
 }
 

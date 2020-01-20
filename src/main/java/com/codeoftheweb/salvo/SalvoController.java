@@ -166,7 +166,7 @@ public class SalvoController {
                 opponentMap.put("gamePlayerID", player.getID());
                 opponentMap.put("opponentName", player.getPlayer().getUserName());
                 opponentMap.put("opponentSalvos", getGamePlayerSalvos(player));
-                // opponentMap.put("opponent_ships", getGamePlayerShips(opponent));
+                opponentMap.put("opponentShips", getGamePlayerShips(player));
             }
         });
         return opponentMap;

@@ -40,8 +40,7 @@ function Table({
             th={row}
             tableType={tableType}
             toggleCellClass={toggleCellClass}
-          />
-        )
+          />)
         )}
 
       </tbody>

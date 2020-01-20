@@ -22,7 +22,6 @@ function TablesContainer({ gameViewObj, classes }) {
   const {
     ships,
     salvos,
-    //gamePlayer_ID,
     playerName,
     opponentInfo
   } = gameViewObj;
@@ -30,12 +29,14 @@ function TablesContainer({ gameViewObj, classes }) {
   const [playerShips, setPlayerShips] = useState([]);
   const [playerSalvos, setPlayerSalvos] = useState([]);
   const [opponentSalvos, setOpponentSalvos] = useState([]);
+  const [opponentShips, setOpponentShips] = useState([]);
 
   useEffect(() => {
     const extractGameViewData = () => {
       let playerShipsArr = [];
       let playerSalvosArr = [];
       let opponentSalvosArr = [];
+      let opponentShips = [];
 
       ships.forEach(ship => (
         playerShipsArr.push(...ship.location)
@@ -47,12 +48,18 @@ function TablesContainer({ gameViewObj, classes }) {
       opponentInfo.opponentSalvos.forEach(salvo => (
         opponentSalvosArr.push(...salvo.location)
       ))
+
+      opponentInfo.opponentShips.forEach(ship => (
+        opponentShips.push(...ship.location)
+      ))
+
       setPlayerShips(playerShipsArr)
       setPlayerSalvos(playerSalvosArr)
       setOpponentSalvos(opponentSalvosArr)
+      setOpponentShips(opponentShips)
     }
     extractGameViewData()
-  }, [ships, salvos, opponentInfo.opponentSalvos])
+  }, [ships, salvos, opponentInfo.opponentSalvos, opponentInfo.opponentShips])
 
   function toggleCellClass(
     typeOfTable,
@@ -63,19 +70,22 @@ function TablesContainer({ gameViewObj, classes }) {
     emptyCellClass,
     idx) {
 
+    // Player grid infos
     if (typeOfTable === "ship") {
       if (playerShips.includes(idx)) {
-        // show player ship's location grid which has been hit by opponent
-        return opponentSalvos.includes(idx) ? hitClass : shipLocationClass
+        return opponentSalvos.includes(idx) ? hitClass : shipLocationClass;
       }
       else if (!playerShips.includes(idx)) {
-        // show missed shots of opponent on player's table
-        return opponentSalvos.includes(idx) ? missClass : emptyCellClass
+        return opponentSalvos.includes(idx) ? missClass : emptyCellClass;
       }
     }
+    // Opponent grid infos
     else if (typeOfTable === "salvo") {
-      // show player's salvos on opponent's table
-      return playerSalvos.includes(idx) ? salvoLocationClass : emptyCellClass
+      if (playerSalvos.includes(idx)) {
+        return opponentShips.includes(idx) ? hitClass : salvoLocationClass;
+      } else {
+        return emptyCellClass;
+      }
     }
   }
 
@@ -102,7 +112,7 @@ function TablesContainer({ gameViewObj, classes }) {
         />
       </div>
     </React.Fragment>
-  )
+  );
 }
 
 export default withStyles(styles)(TablesContainer);

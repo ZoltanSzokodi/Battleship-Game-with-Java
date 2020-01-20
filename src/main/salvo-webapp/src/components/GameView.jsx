@@ -25,26 +25,35 @@ function GameView({ classes }) {
   const gamePlayerID = getParameterByName('gp');
 
   const [gameViewObj, setGameViewObj] = useState({});
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
-    const getGameViewObj = async () => {
-      const url = `http://localhost:8080/api/game_view/${gamePlayerID}`;
+    const fetchData = async () => {
+      setIsError(false)
 
       try {
-        let response = await axios.get(url);
-        let data = await response.data;
-        setGameViewObj(data);
-        setLoading(false)
-      } catch (err) { console.log(err) }
+        let response = await axios.get(`http://localhost:8080/api/game_view/${gamePlayerID}`);
+        //let data = await response.data;
+        setGameViewObj(response.data)
+        setIsLoading(false)
+      } catch (error) {
+        setIsError(true)
+        setErrorMsg(error.message);
+      }
     }
-    getGameViewObj()
+    fetchData()
   }, [gamePlayerID])
 
 
   return (
     <div className={classes.gameViewWrapper}>
-      {!loading && <TablesContainer gameViewObj={gameViewObj} />}
+      {isError ?
+        (<div>{errorMsg}</div>)
+        : isLoading ?
+          (<div>LOADING...</div>)
+          : (<TablesContainer gameViewObj={gameViewObj} />)}
     </div>
   )
 }
