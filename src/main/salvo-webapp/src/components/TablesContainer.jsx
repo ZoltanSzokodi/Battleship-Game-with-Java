@@ -41,6 +41,7 @@ function TablesContainer({ gameViewObj, classes }) {
       ships.forEach(ship => (
         playerShipsArr.push(...ship.location)
       ))
+
       salvos.forEach(salvo => (
         playerSalvosArr.push(...salvo.location)
       ))

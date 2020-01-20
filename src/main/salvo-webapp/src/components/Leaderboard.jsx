@@ -9,7 +9,6 @@ const styles = {
     height: "auto",
     border: "1px solid black",
     borderCollapse: "collapse",
-    marginTop: "10rem",
     fontSize: "1.6rem"
   },
   '@global': {

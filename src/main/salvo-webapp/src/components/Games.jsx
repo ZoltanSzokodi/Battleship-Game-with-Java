@@ -6,34 +6,45 @@ import { withStyles } from '@material-ui/styles';
 const styles = {
   leaderboardWrapper: {
     width: "100vw",
-    height: "auto",
+    minHeight: "100vh",
     display: "flex",
-    justifyContent: "center"
+    justifyContent: "center",
+    alignItems: "center"
   }
 };
 
 function Games({ classes }) {
   const [gamesObj, setGamesObj] = useState({});
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
-    const getGamesObj = async () => {
-      const url = 'http://localhost:8080/api/games';
+    const fetchData = async () => {
+      setIsError(false)
+      setIsLoading(true);
 
       try {
-        let response = await axios.get(url)
-        let data = await response.data;
-        setGamesObj(data);
-        setLoading(false);
-      } catch (err) { console.log(err) }
+        let response = await axios.get('http://localhost:8080/api/games')
+        setGamesObj(response.data);
+        setIsLoading(false);
+      } catch (error) {
+        setIsError(true)
+        setErrorMsg(error.message);
+      }
+      setIsLoading(false)
     }
-    getGamesObj();
+    fetchData();
   }, [])
 
 
   return (
     <div className={classes.leaderboardWrapper}>
-      {!loading && <LeaderboardContainer gamesObj={gamesObj} />}
+      {isError ?
+        (<div>{errorMsg}</div>)
+        : isLoading ?
+          (<div>LOADING...</div>)
+          : (<LeaderboardContainer gamesObj={gamesObj} />)}
     </div>
   );
 }

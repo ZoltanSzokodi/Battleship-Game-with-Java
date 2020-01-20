@@ -22,16 +22,19 @@ const styles = {
 
 function GameView({ classes }) {
   // extract parameters from the url and place it in a variable
-  const gamePlayerID = getParameterByName('gp');
-
   const [gameViewObj, setGameViewObj] = useState({});
+  // const [isLoading, setIsLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
+    // if I leave this changing variable outside of the useEffect I need to include it in the dependncy array
+    const gamePlayerID = getParameterByName('gp');
+
     const fetchData = async () => {
       setIsError(false)
+      //setIsLoading(true);
 
       try {
         let response = await axios.get(`http://localhost:8080/api/game_view/${gamePlayerID}`);
@@ -42,9 +45,10 @@ function GameView({ classes }) {
         setIsError(true)
         setErrorMsg(error.message);
       }
+      // setIsLoading(false)
     }
     fetchData()
-  }, [gamePlayerID])
+  }, [])
 
 
   return (
@@ -55,7 +59,7 @@ function GameView({ classes }) {
           (<div>LOADING...</div>)
           : (<TablesContainer gameViewObj={gameViewObj} />)}
     </div>
-  )
+  );
 }
 
 export default withStyles(styles)(GameView);

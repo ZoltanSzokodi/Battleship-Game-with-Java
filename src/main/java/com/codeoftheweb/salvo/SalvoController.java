@@ -1,13 +1,9 @@
 package com.codeoftheweb.salvo;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 // The controller holds the methods to handle requests to and from the API.
 @CrossOrigin(origins = "http://localhost:3000")
