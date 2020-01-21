@@ -36,9 +36,10 @@ public class Player {
     // You must define a default (no-argument) constructor for any entity class. That's what JPA will call to create new instances
     public Player() { };
 
-    public Player(String email, String userName) {
-        this.email = email;
+    public Player(String userName, String email, String password) {
         this.userName = userName;
+        this.email = email;
+        this.password = password;
     }
 
     /* getters and setters */

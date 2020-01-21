@@ -1,6 +1,9 @@
 package com.codeoftheweb.salvo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -28,6 +31,32 @@ public class SalvoController {
 
     @Autowired
     private ScoreRepository scoreRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    // Registration method
+    @RequestMapping(path = "/players", method = RequestMethod.POST)
+    public ResponseEntity<Object> register(
+            @RequestParam String userName,
+            @RequestParam String email,
+            @RequestParam String password) {
+
+        if (userName.isEmpty() || email.isEmpty() || password.isEmpty()) {
+            return new ResponseEntity<>("Missing credentials", HttpStatus.FORBIDDEN);
+        }
+
+        if(playerRepository.findByUserName(userName) != null) {
+            return new ResponseEntity<>("name already in use", HttpStatus.FORBIDDEN);
+        }
+
+        if (playerRepository.findByEmail(email) !=  null) {
+            return new ResponseEntity<>("email already in use", HttpStatus.FORBIDDEN);
+        }
+        // one-wy-encryption
+        playerRepository.save(new Player(userName, email, passwordEncoder.encode(password)));
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
 
     // structuring the api route for all the games
     @RequestMapping("/games")

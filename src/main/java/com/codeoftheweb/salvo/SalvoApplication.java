@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -14,15 +15,28 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.WebAttributes;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.Collections;
 
 @SpringBootApplication
-public class SalvoApplication {
+public class SalvoApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SalvoApplication.class, args);
+	}
+
+	// Password encryption
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	}
 
 	// Testing the API end points
@@ -42,17 +56,18 @@ public class SalvoApplication {
 			// Data includes creating players (w/ username and passwords), games, gameplayers (an instance of a player in a game),
 			// ships, and shot locations.
 
-			Player player1 = new Player("Peter", "peterGriffin@email.com");
-			Player player2 = new Player("Glenn", "glennQuagmire@email.com");
-			Player player3 = new Player("Joe", "joeSwanson@email.com");
-			Player player4 = new Player("Cleveland", "clevelandBrown@email.com");
+			Player player1 = new Player("Peter", "peterGriffin@email.com", "booze");
+			Player player2 = new Player("Glenn", "glennQuagmire@email.com", "giggity");
+			Player player3 = new Player("Joe", "joeSwanson@email.com", "police");
+			Player player4 = new Player("Cleveland", "clevelandBrown@email.com", "loretta");
 
-			// is this necessary?
+			// are these necessary?
+			/*
 			player1.setPassword("booze");
 			player2.setPassword("giggity");
 			player3.setPassword("police");
 			player4.setPassword("loretta");
-
+			*/
 
 			playerRepository.save(player1);
 			playerRepository.save(player2);
@@ -198,7 +213,6 @@ public class SalvoApplication {
 	}
 
 	// SECURITY
-	@EnableWebSecurity
 	@Configuration
 	class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
 
@@ -207,11 +221,11 @@ public class SalvoApplication {
 
 		@Override
 		public void init(AuthenticationManagerBuilder auth) throws Exception {
-			auth.userDetailsService(inputName-> {
-				Player player = playerRepository.findByUserName(inputName);
+			auth.userDetailsService(inputName -> {
+				Player player = playerRepository.findByEmail(inputName);
 				if (player != null) {
-					return new User(player.getUserName(), player.getPassword(),
-							AuthorityUtils.createAuthorityList("USER"));
+					return new User(player.getEmail(), player.getPassword(),
+							AuthorityUtils.createAuthorityList("USER", "ADMIN"));
 				} else {
 					throw new UsernameNotFoundException("Unknown user: " + inputName);
 				}
@@ -225,10 +239,38 @@ public class SalvoApplication {
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http.authorizeRequests()
-					.antMatchers("/admin/**").hasAuthority("ADMIN")
-					.antMatchers("/**").hasAuthority("USER")
-					.and()
-					.formLogin();
+					.antMatchers("/rest/**").hasAuthority("ADMIN")
+					// /** includes all the api endpoints as well so we have to make sure we don't serve sensitive information about the opponent in the DTO (like ship locations)
+					.antMatchers("/**").hasAnyAuthority("USER")
+					.anyRequest().authenticated();
+			http.formLogin()
+					.usernameParameter("username")
+					.passwordParameter("password")
+					.loginPage("/app/login");
+
+			http.logout().logoutUrl("/app/logout");
+
+			// turn off checking for CSRF tokens
+			http.csrf().disable();
+
+			// if user is not authenticated, just send an authentication failure response
+			http.exceptionHandling().authenticationEntryPoint((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED));
+
+			// if login is successful, just clear the flags asking for authentication
+			http.formLogin().successHandler((req, res, auth) -> clearAuthenticationAttributes(req));
+
+			// if login fails, just send an authentication failure response
+			http.formLogin().failureHandler((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED));
+
+			// if logout is successful, just send a success response
+			http.logout().logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler());
+		}
+
+		private void clearAuthenticationAttributes(HttpServletRequest request) {
+			HttpSession session = request.getSession(false);
+			if (session != null) {
+				session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+			}
 		}
 	}
 }
