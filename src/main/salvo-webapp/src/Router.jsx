@@ -9,10 +9,10 @@ function Router() {
   return (
     <BrowserRouter>
       <React.Fragment>
-        <Route exact path="/app/login" component={Login} />
-        <Route exact path="/app/logout" component={Logout} />
-        <Route exact path="/app/games" component={Games} />
-        <Route exact path="/app/game" component={GameTable} />
+        <Route exact path="/login" component={Login} />
+        <Route exact path="/logout" component={Logout} />
+        <Route exact path="/games" component={Games} />
+        <Route exact path="/game" component={GameTable} />
       </React.Fragment>
     </BrowserRouter>
   )

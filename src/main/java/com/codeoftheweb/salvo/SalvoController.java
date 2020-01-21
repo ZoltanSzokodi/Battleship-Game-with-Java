@@ -35,7 +35,7 @@ public class SalvoController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    // Registration method
+    // post method for created a new player with their desired login credentials.
     @RequestMapping(path = "/players", method = RequestMethod.POST)
     public ResponseEntity<Object> register(
             @RequestParam String userName,
@@ -53,7 +53,7 @@ public class SalvoController {
         if (playerRepository.findByEmail(email) !=  null) {
             return new ResponseEntity<>("email already in use", HttpStatus.FORBIDDEN);
         }
-        // one-wy-encryption
+        // one-way-encryption
         playerRepository.save(new Player(userName, email, passwordEncoder.encode(password)));
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

@@ -211,66 +211,67 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			scoreRepository.save(score6);
 		};
 	}
+}
 
-	// SECURITY
-	@Configuration
-	class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
+// SECURITY
+@Configuration
+class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
 
-		@Autowired
-		PlayerRepository playerRepository;
+	@Autowired
+	PlayerRepository playerRepository;
 
-		@Override
-		public void init(AuthenticationManagerBuilder auth) throws Exception {
-			auth.userDetailsService(inputName -> {
-				Player player = playerRepository.findByEmail(inputName);
-				if (player != null) {
-					return new User(player.getEmail(), player.getPassword(),
-							AuthorityUtils.createAuthorityList("USER", "ADMIN"));
-				} else {
-					throw new UsernameNotFoundException("Unknown user: " + inputName);
-				}
-			});
-		}
+	@Override
+	public void init(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(inputName -> {
+			Player player = playerRepository.findByUserName(inputName);
+			if (player != null) {
+				return new User(player.getUserName(), player.getPassword(),
+						AuthorityUtils.createAuthorityList("USER", "ADMIN"));
+			} else {
+				throw new UsernameNotFoundException("Unknown user: " + inputName);
+			}
+		});
+	}
+}
+
+@EnableWebSecurity
+@Configuration
+class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http.authorizeRequests()
+				.antMatchers("/rest/**").hasAuthority("ADMIN")
+				// /** includes all the api endpoints as well so we have to make sure we don't serve sensitive information about the opponent in the player's DTO (like ship locations)
+				.antMatchers("/login").permitAll()
+				.antMatchers("/logout").permitAll()
+				.antMatchers("/**").hasAnyAuthority("USER");
+		http.formLogin()
+				.usernameParameter("username")
+				.passwordParameter("password")
+				.loginPage("/api/login");
+
+		http.logout().logoutUrl("/api/logout");
+
+		// turn off checking for CSRF tokens
+		http.csrf().disable();
+
+		// if user is not authenticated, just send an authentication failure response
+		http.exceptionHandling().authenticationEntryPoint((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED));
+
+		// if login is successful, just clear the flags asking for authentication
+		http.formLogin().successHandler((req, res, auth) -> clearAuthenticationAttributes(req));
+
+		// if login fails, just send an authentication failure response
+		http.formLogin().failureHandler((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED));
+
+		// if logout is successful, just send a success response
+		http.logout().logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler());
 	}
 
-	@Configuration
-	@EnableWebSecurity
-	class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-		@Override
-		protected void configure(HttpSecurity http) throws Exception {
-			http.authorizeRequests()
-					.antMatchers("/rest/**").hasAuthority("ADMIN")
-					// /** includes all the api endpoints as well so we have to make sure we don't serve sensitive information about the opponent in the DTO (like ship locations)
-					.antMatchers("/**").hasAnyAuthority("USER")
-					.anyRequest().authenticated();
-			http.formLogin()
-					.usernameParameter("username")
-					.passwordParameter("password")
-					.loginPage("/app/login");
-
-			http.logout().logoutUrl("/app/logout");
-
-			// turn off checking for CSRF tokens
-			http.csrf().disable();
-
-			// if user is not authenticated, just send an authentication failure response
-			http.exceptionHandling().authenticationEntryPoint((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED));
-
-			// if login is successful, just clear the flags asking for authentication
-			http.formLogin().successHandler((req, res, auth) -> clearAuthenticationAttributes(req));
-
-			// if login fails, just send an authentication failure response
-			http.formLogin().failureHandler((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED));
-
-			// if logout is successful, just send a success response
-			http.logout().logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler());
-		}
-
-		private void clearAuthenticationAttributes(HttpServletRequest request) {
-			HttpSession session = request.getSession(false);
-			if (session != null) {
-				session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
-			}
+	private void clearAuthenticationAttributes(HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
 		}
 	}
 }
