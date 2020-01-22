@@ -3,6 +3,8 @@ package com.codeoftheweb.salvo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,7 +62,7 @@ public class SalvoController {
 
     // structuring the api route for all the games
     @RequestMapping("/games")
-    public Map<String, Object> getGames() {
+    public Map<String, Object> getGames(Authentication authentication) {
 
         Map<String, Object> games = new LinkedHashMap<>();
 
@@ -117,6 +119,16 @@ public class SalvoController {
         // add the gamesList to the games map
         games.put("games", gamesList);
         games.put("leaderboard", getLeaderboard());
+
+        if (!isGuest(authentication)){
+            Map<String, Object> onePlayer = new HashMap<>();
+
+            onePlayer.put("playerID", getAuthenticatedPlayer(authentication).getID());
+            onePlayer.put("username", getAuthenticatedPlayer(authentication).getUserName());
+            games.put("player", onePlayer);
+        } else {
+            games.put("player", null);
+        }
 
         return games;
     }
@@ -213,5 +225,14 @@ public class SalvoController {
             scoreList.add(playersScore);
         });
         return scoreList;
+    }
+
+    // function to search database to authenticate if a user exists.
+    private Player getAuthenticatedPlayer (Authentication authentication){
+        return playerRepository.findByUserName(authentication.getName());
+    };
+
+    private boolean isGuest(Authentication authentication) {
+        return authentication == null || authentication instanceof AnonymousAuthenticationToken;
     }
 }

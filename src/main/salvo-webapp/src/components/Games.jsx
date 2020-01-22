@@ -37,6 +37,7 @@ function Games({ classes }) {
     fetchData();
   }, [])
 
+  console.log(gamesObj)
 
   return (
     <div className={classes.leaderboardWrapper}>

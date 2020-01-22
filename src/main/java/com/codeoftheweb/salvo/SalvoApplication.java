@@ -19,7 +19,6 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.cors.CorsConfiguration;
 
 import javax.servlet.http.HttpServletRequest;
@@ -58,13 +57,13 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			// Data includes creating players (w/ username and passwords), games, gameplayers (an instance of a player in a game),
 			// ships, and shot locations.
 
-			Player player1 = new Player("Peter", "peterGriffin@email.com", "booze");
-			Player player2 = new Player("Glenn", "glennQuagmire@email.com", "giggity");
-			Player player3 = new Player("Joe", "joeSwanson@email.com", "police");
-			Player player4 = new Player("Cleveland", "clevelandBrown@email.com", "loretta");
+			Player player1 = new Player("Peter", "peterGriffin@email.com", passwordEncoder().encode("booze"));
+			Player player2 = new Player("Glenn", "glennQuagmire@email.com", passwordEncoder().encode("giggity"));
+			Player player3 = new Player("Joe", "joeSwanson@email.com", passwordEncoder().encode("police"));
+			Player player4 = new Player("Cleveland", "clevelandBrown@email.com", passwordEncoder().encode("loretta"));
+
 
 			// are these necessary?
-
 			/*
 			player1.setPassword("booze");
 			player2.setPassword("giggity");
@@ -241,8 +240,10 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
 @EnableWebSecurity
 @Configuration
 class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+
 		http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()).and()
 				.authorizeRequests()
 				.antMatchers("/**").permitAll()
