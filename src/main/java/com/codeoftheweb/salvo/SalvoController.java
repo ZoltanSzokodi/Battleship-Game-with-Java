@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 // The controller holds the methods to handle requests to and from the API.
-@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:3000")
 public class SalvoController {
 
     @Autowired

@@ -19,6 +19,8 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.cors.CorsConfiguration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -62,12 +64,14 @@ public class SalvoApplication extends SpringBootServletInitializer {
 			Player player4 = new Player("Cleveland", "clevelandBrown@email.com", "loretta");
 
 			// are these necessary?
+
 			/*
 			player1.setPassword("booze");
 			player2.setPassword("giggity");
 			player3.setPassword("police");
 			player4.setPassword("loretta");
 			*/
+
 
 			playerRepository.save(player1);
 			playerRepository.save(player2);
@@ -226,7 +230,7 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
 			Player player = playerRepository.findByUserName(inputName);
 			if (player != null) {
 				return new User(player.getUserName(), player.getPassword(),
-						AuthorityUtils.createAuthorityList("USER", "ADMIN"));
+						AuthorityUtils.createAuthorityList("USER"));
 			} else {
 				throw new UsernameNotFoundException("Unknown user: " + inputName);
 			}
@@ -239,17 +243,15 @@ class WebSecurityConfiguration extends GlobalAuthenticationConfigurerAdapter {
 class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests()
-				.antMatchers("/rest/**").hasAuthority("ADMIN")
-				// /** includes all the api endpoints as well so we have to make sure we don't serve sensitive information about the opponent in the player's DTO (like ship locations)
-				.antMatchers("/login").permitAll()
-				.antMatchers("/logout").permitAll()
-				.antMatchers("/**").hasAnyAuthority("USER");
+		http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues()).and()
+				.authorizeRequests()
+				.antMatchers("/**").permitAll()
+				.antMatchers("/static/**").permitAll()
+				.antMatchers("/static/css**").permitAll();
 		http.formLogin()
 				.usernameParameter("username")
 				.passwordParameter("password")
 				.loginPage("/api/login");
-
 		http.logout().logoutUrl("/api/logout");
 
 		// turn off checking for CSRF tokens
